@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Agent{% endblock %}
+{% block contenttitle %}Enregistrer un nouvel agent{% endblock %}
+
+{% block body %}
+    <!-- Button to Open the Modal -->
+    <button type="button" class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#myModal">
+        Create new Agent
+    </button>
+
+    <!-- La fenêtre modale qui affichera le formulaire -->
+    <div class="modal" id="myModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div class="modal-header">
+                    <h4 class="modal-title">Enregistrer un nouvel agent</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div class="modal-body">
+                    {{ include('agent/_form.html.twig') }}
+                </div>
+
+                <!-- Modal footer -->
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <a href="{{ path('app_agent_index') }}">back to list</a>
+{% endblock %}

@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+{% block contenttitle %}Nouvel utilisateur{% endblock %}
+
+{% block body %}
+
+    {{ form_start(registrationForm) }}
+        <div class="row">
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.fullname) }}</div>
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.email) }}</div>
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.telephone) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.password.first) }}</div>
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.password.second) }}</div>
+            <div class="col-md form-control-sm">{{ form_row(registrationForm.roles) }}</div>
+        </div>
+        <div class="row form-control-sm">
+            {{ form_row(registrationForm.agreeTerms) }}
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
+        <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-ban"></i> Annuler</button>
+    {{ form_end(registrationForm) }}
+{% endblock %}

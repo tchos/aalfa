@@ -2,18 +2,33 @@
 <html>
     <head>
         <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }}
-        {% endblock %}
-
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }}
-            {% block importmap %}{{ importmap('app') }}{% endblock %}
-        {% endblock %}
+        <title>AALFA - {% block title %}{% endblock %}</title>
+        <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/bootstrap.min.css') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/dataTables.bootstrap5.css') }}">
+        <link rel="stylesheet" href="{{ asset('asset/css/datatables.min.css') }}">
+        {% block stylesheets %}{% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+        {% include '_partials/_header.html.twig' %}
+        <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-5">
+            <div class="row">
+                {% if app.user %}
+                    {% include '_partials/_aside.html.twig' %}
+                {% endif %}
+                <div class="col-sm">
+                    <h2>AALFA - {% block contenttitle %}{% endblock %}</h2>
+                    <hr class="mb-5 border-primary">
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
+        {% if app.user %}
+            {% include '_partials/_footer.html.twig' %}
+        {% endif %}
+        <script src="{{ asset('asset/js/all.min.js') }}"></script>
+        <script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ asset('asset/js/bootstrap.min.js') }}"></script>
+        {% block javascripts %}{% endblock %}
     </body>
 </html>
