@@ -1,0 +1,52 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion !{% endblock %}
+{% block contenttitle %}Connexion{% endblock %}
+
+{% block body %}
+<form method="post">
+    {% if error %}
+        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+    {% endif %}
+
+    {% if app.user %}
+        <div class="mb-3">
+            Vous êtes connecté comme {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Logout</a>
+        </div>
+    {% endif %}
+
+    <div class="row">
+        <div class="col-md">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-id-badge"></i> <span class="ms-2">Votre Email</span></span>
+                <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+            </div>
+        </div>
+        <div class="col-md">
+            <div class="input-group mb-3">
+                <span class="input-group-text"><i class="fa-solid fa-key"></i> <span class="ms-2">Mot de passe</span></span>
+                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+            </div>
+        </div>
+    </div>
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="_remember_me"> Se souvenir de moi
+        </label>
+    </div>
+
+    <button class="btn btn-sm btn-primary" type="submit">
+        <i class="fa-solid fa-arrow-right-to-bracket"></i> Se connecter
+    </button>
+
+    <!--
+        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <label for="inputEmail"><i class="fa-solid fa-id-badge"></i> Email</label>
+        <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
+        <label for="inputPassword"><i class="fa-solid fa-key"></i> Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+    -->
+</form>
+{% endblock %}

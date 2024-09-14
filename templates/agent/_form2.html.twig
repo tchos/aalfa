@@ -1,0 +1,8 @@
+{{ form_start(form, {'action' : path('app_agent_edit',{'id':id})}) }}
+    {# {{ form_widget(form) }} #}
+    <div class="row">{{ form_row(form.matricule) }}</div>
+    <div class="row">{{ form_row(form.nomAgt) }}</div>
+    <div class="row">{{ form_row(form.dateNaisAgt) }}</div>
+    <div class="row">{{ form_row(form.dateEmbAgt) }}</div>
+    <div class="row">{{ form_row(form.nb_enft_paye) }}</div>
+{{ form_end(form) }}

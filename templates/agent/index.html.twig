@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Agent index{% endblock %}
+
+{% block body %}
+    <h1>Agent index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricule</th>
+                <th>NomAgt</th>
+                <th>DateNaisAgt</th>
+                <th>DateEmbAgt</th>
+                <th>Nb_enft_paye</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for agent in agents %}
+            <tr>
+                <td>{{ agent.id }}</td>
+                <td>{{ agent.matricule }}</td>
+                <td>{{ agent.nomAgt }}</td>
+                <td>{{ agent.dateNaisAgt ? agent.dateNaisAgt|date('Y-m-d') : '' }}</td>
+                <td>{{ agent.dateEmbAgt ? agent.dateEmbAgt|date('Y-m-d') : '' }}</td>
+                <td>{{ agent.nbEnftPaye }}</td>
+                <td>
+                    <a href="{{ path('app_agent_show', {'id': agent.id}) }}">show</a>
+                    {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
+                    <!-- Button to Open the Modal -->
+                    <button href="{{ path('app_agent_edit', {'id': agent.id}) }}" type="button" class="btn btn-sm btn-primary"
+                            data-bs-toggle="modal" data-bs-target="#editAgent" data-id="{{ agent.id }}">
+                        Modifier l'agent
+                    </button>
+
+                    <!-- La fenêtre modale qui affichera le formulaire -->
+                    <div class="modal" id="editAgent">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+
+                                <!-- Modal Header -->
+                                <div class="modal-header">
+                                    <h4 class="modal-title">Modifier les infos de l'agent</h4>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+
+                                <!-- Modal body -->
+                                <div class="modal-body">
+                                    {{render(controller('App\\Controller\\AgentController::edit',{'id': agent.id})) }}
+                                </div>
+
+                                <!-- Modal footer -->
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_agent_new') }}">Create new</a>
+{% endblock %}
+{#
+{% block javascripts %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const editButton = document.querySelector('[data-bs-target="#editAgent"]');
+            const modalBody = document.querySelector('#editAgent .modal-body');
+
+            editButton.addEventListener('click', function () {
+                // Récupérer l'ID de l'article depuis le bouton
+                const agentId = editButton.getAttribute('data-id');
+                const url = `/agent/${agentId}/edit`; // Idéalement, tu passes dynamiquement l'ID ici /agent/${agentId}/edit
+
+                fetch(url)
+                .then(response => response.text())
+                .then(html => {
+                    modalBody.innerHTML = html;
+                })
+                .catch(error => {
+                    console.error('Erreur lors du chargement du formulaire:', error);
+                });
+            });
+        });
+
+        document.addEventListener('submit', function (event) {
+            if (event.target && event.target.id === 'agent-form') {
+                //event.preventDefault(); // Empêcher la soumission classique
+
+                const form = event.target;
+                const formData = new FormData(form);
+                const action = form.getAttribute('action');
+
+                fetch(action, {
+                    method: 'POST',
+                    body: formData,
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        // Fermer la modale et afficher un message de succès
+                        document.querySelector('#editAgent .btn-close').click();
+                        alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la soumission du formulaire:', error);
+                });
+            }
+        });
+    </script>
+{% endblock %}
+#}
