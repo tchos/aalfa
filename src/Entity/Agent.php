@@ -11,6 +11,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: AgentRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(
     fields: ['matricule'],
     message: 'Il existe déjà un autre agent avec ce matricule'
@@ -53,6 +54,37 @@ class Agent
      */
     #[ORM\OneToMany(targetEntity: Enfant::class, mappedBy: 'agent')]
     private Collection $enfants;
+
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $telephone = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $equipe = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?\DateTimeImmutable $createAt = null;
+
+    /**
+     * CallBack appelé à chaque fois que l'on veut enregistrer un agent pour
+     * prendre automatiquement la date de saisie des infos sur l'agent .
+     */
+    #[ORM\PrePersist]
+    public function PrePersist()
+    {
+        if (empty($this->createdAt)) {
+            $this->createdAt = new \DateTimeImmutable();
+        }
+    }
+
+    /**
+     * CallBack appelé à chaque fois que l'on veut mettre à jour un agent pour
+     * prendre automatiquement la date de saisie des infos sur l'agent .
+     */
+    #[ORM\PreUpdate]
+    public function  PreUpdate()
+    {
+        $this->createdAt = new \DateTimeImmutable();
+    }
 
     public function __construct()
     {
@@ -150,6 +182,42 @@ class Agent
                 $enfant->setAgent(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getTelephone(): ?string
+    {
+        return $this->telephone;
+    }
+
+    public function setTelephone(?string $telephone): static
+    {
+        $this->telephone = $telephone;
+
+        return $this;
+    }
+
+    public function getEquipe(): ?int
+    {
+        return $this->equipe;
+    }
+
+    public function setEquipe(?int $equipe): static
+    {
+        $this->equipe = $equipe;
+
+        return $this;
+    }
+
+    public function getCreateAt(): ?\DateTimeImmutable
+    {
+        return $this->createAt;
+    }
+
+    public function setCreateAt(?\DateTimeImmutable $createAt): static
+    {
+        $this->createAt = $createAt;
 
         return $this;
     }

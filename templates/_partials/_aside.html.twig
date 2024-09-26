@@ -1,23 +1,29 @@
 <div class="col-sm-2 mx-5">
-    <h2>About Me</h2>
-    <h5>Photo of me:</h5>
-    <div class="fakeimg">Fake Image</div>
-    <p>Some text about me in culpa qui officia deserunt mollit anim..</p>
-    <h3 class="mt-4">Some Links</h3>
-    <p>Lorem ipsum dolor sit ame.</p>
-    <ul class="nav nav-pills flex-column">
-        <li class="nav-item">
-            <a class="nav-link active" href="#">Active</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link" href="#">Link</a>
-        </li>
-        <li class="nav-item">
-            <a class="nav-link disabled" href="#">Disabled</a>
-        </li>
-    </ul>
+    <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header">Statistiques globales des saisies</div>
+        <div class="card-body text-primary">
+            <div class="row">
+                <div class="col-8"><p class="card-text">1er: </p></div>
+                <div class="col"><span class="badge text-bg-success">{{ 200000 | number_format(0,'.',' ') }}</span></div>
+            </div>
+            <div class="row">
+                <div class="col-8"><p class="card-text">Total: </p></div>
+                <div class="col"><span class="badge text-bg-dark">{{ cpteurUser | number_format(0,'.',' ') }}</span></div>
+            </div>
+        </div>
+    </div>
+    <div class="card border-primary mb-3" style="max-width: 18rem;">
+        <div class="card-header">Statistiques Journalières des saisies</div>
+        <div class="card-body text-primary">
+            <div class="row">
+                <div class="col-8"><p class="card-text">1er: </p></div>
+                <div class="col"><span class="badge text-bg-primary">{{ 20000 | number_format(0,'.',' ') }}</span></div>
+            </div>
+            <div class="row">
+                <div class="col-8"><p class="card-text">Vous: </p></div>
+                <div class="col"><span class="badge text-bg-dark">{{ cpteurDailyUser | number_format(0,'.',' ') }}</span></div>
+            </div>
+        </div>
+    </div>
     <hr class="d-sm-none">
 </div>

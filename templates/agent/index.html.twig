@@ -1,123 +1,152 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Agent index{% endblock %}
+{% block contenttitle %}Nouvelle fiche de collecte{% endblock %}
 
 {% block body %}
-    <h1>Agent index</h1>
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row">
+            {{ form_errors(form.matricule) }}
+            <div class="col-sm-6">
+                {{ form_widget(form.matricule) }}
+            </div>
+            <div class="col-sm">
+                {{ form_row(form.submit) }}
+            </div>
+        </div>
+    {{ form_end(form) }}
 
-    <table class="table">
-        <thead>
-            <tr>
-                <th>Id</th>
-                <th>Matricule</th>
-                <th>NomAgt</th>
-                <th>DateNaisAgt</th>
-                <th>DateEmbAgt</th>
-                <th>Nb_enft_paye</th>
-                <th>actions</th>
-            </tr>
-        </thead>
-        <tbody>
-        {% for agent in agents %}
-            <tr>
-                <td>{{ agent.id }}</td>
-                <td>{{ agent.matricule }}</td>
-                <td>{{ agent.nomAgt }}</td>
-                <td>{{ agent.dateNaisAgt ? agent.dateNaisAgt|date('Y-m-d') : '' }}</td>
-                <td>{{ agent.dateEmbAgt ? agent.dateEmbAgt|date('Y-m-d') : '' }}</td>
-                <td>{{ agent.nbEnftPaye }}</td>
-                <td>
-                    <a href="{{ path('app_agent_show', {'id': agent.id}) }}">show</a>
-                    {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
-                    <!-- Button to Open the Modal -->
-                    <button href="{{ path('app_agent_edit', {'id': agent.id}) }}" type="button" class="btn btn-sm btn-primary"
-                            data-bs-toggle="modal" data-bs-target="#editAgent" data-id="{{ agent.id }}">
-                        Modifier l'agent
-                    </button>
+    {# Au cas où l'on trouve l'agent #}
+    {% if agent %}
+        <hr class="my-5 border-primary">
+        <table class="table table-striped table-hover" name="parent">
+            <thead>
+                <tr>
+                    <th scope="col">Matricule</th>
+                    <th scope="col">Nom complet</th>
+                    <th scope="col" class="text-center">Naissance</th>
+                    <th scope="col" class="text-center">Date Emb.</th>
+                    <th scope="col" class="text-center">Nbre Enft payé</th>
+                    <th scope="col" class="text-center">Téléphones</th>
+                    <th scope="col" class="text-center">Equipe</th>
+                    <th scope="col" class="text-center">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row">{{ agent.matricule }}</th>
+                    <td>{{ agent.nomAgt }}</td>
+                    <td class="text-center">{{ agent.dateNaisAgt|date('d-m-Y') }}</td>
+                    <td class="text-center">{{ agent.dateEmbAgt|date('d-m-Y') }}</td>
+                    <td class="text-center">{{ agent.NbEnftPaye }}</td>
+                    <td class="text-center">{{ agent.telephone }}</td>
+                    <td class="text-center">{{ agent.equipe }}</td>
+                    <td class="text-center">
+                        {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
+                        <!-- Button to Open the Modal -->
+                        <button href="{{ path('app_agent_edit', {'id': agent.id}) }}" type="button" class="btn btn-sm btn-primary"
+                                data-bs-toggle="modal" data-bs-target="#editAgent" data-id="{{ agent.id }}">
+                            Modifier l'agent
+                        </button>
 
-                    <!-- La fenêtre modale qui affichera le formulaire -->
-                    <div class="modal" id="editAgent">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
+                        <!-- La fenêtre modale qui affichera le formulaire -->
+                        <div class="modal" id="editAgent">
+                            <div class="modal-dialog modal-lg">
+                                <div class="modal-content">
 
-                                <!-- Modal Header -->
-                                <div class="modal-header">
-                                    <h4 class="modal-title">Modifier les infos de l'agent</h4>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                </div>
+                                    <!-- Modal Header -->
+                                    <div class="modal-header">
+                                        <h4 class="modal-title">Modifier les infos de l'agent</h4>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
 
-                                <!-- Modal body -->
-                                <div class="modal-body">
-                                    {{render(controller('App\\Controller\\AgentController::edit',{'id': agent.id})) }}
-                                </div>
+                                    <!-- Modal body -->
+                                    <div class="modal-body text-start">
+                                        {{render(controller('App\\Controller\\AgentController::edit',{'id': agent.id})) }}
+                                    </div>
 
-                                <!-- Modal footer -->
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                                    <!-- Modal footer -->
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                </td>
-            </tr>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        {% if agent.equipe and agent.telephone  %}
+            <div class="row mx-1">
+                <span class="text-bg-dark fw-bolder text-center mt-5">Enfants payés au fichier solde</span>
+            </div>
+            <table class="table table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Noms</th>
+                        <th scope="col">Naissance</th>
+                        <th scope="col">Nom conjoint</th>
+                        <th scope="col" class="text-center">Reconnu (O/N) ?</th>
+                        <th scope="col" class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for enfant in agent.enfants %}
+                        <tr>
+                            <td>{{ enfant.nomEnfant }}</td>
+                            <td>{{ enfant.dateNaissance|date('d-m-Y') }}</td>
+                            <td>{{ enfant.nomConjoint }}</td>
+                            <td class="text-center">{% if enfant.isEnfantReconnuYN == false %}NON{% else  %}OUI{% endif %}</td>
+                            <td class="text-center">
+                                <button href="{{ path('app_enfant_edit', {'id': enfant.id}) }}" type="button"
+                                        class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}"
+                                        data-bs-toggle="modal" data-bs-target="#editEnfant-{{ enfant.id }}" data-id="{{ enfant.id }}">
+                                    {% if enfant.isEnfantReconnuYN == true %}Le modifier{% else %}Renseigner{% endif %}
+                                    {% set i = enfant.id %}
+                                </button>
+
+                                <!-- La fenêtre modale qui affichera le formulaire -->
+                                <div class="modal" id="editEnfant-{{ enfant.id }}">
+                                    <div class="modal-dialog modal-lg">
+                                        <div class="modal-content">
+
+                                            <!-- Modal Header -->
+                                            <div class="modal-header bg-success">
+                                                <h4 class="modal-title fw-bolder">Modifier les informations sur l'enfant {{ i }}</h4>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                            </div>
+
+                                            <!-- Modal body -->
+                                            <div class="modal-body text-start">
+                                                {{render(controller('App\\Controller\\EnfantController::edit',{'id': enfant.id})) }}
+                                            </div>
+
+                                            <!-- Modal footer -->
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-sm btn-dark" data-bs-dismiss="modal">Close</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         {% else %}
-            <tr>
-                <td colspan="7">no records found</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
-
-    <a href="{{ path('app_agent_new') }}">Create new</a>
+            <div class="row mx-1">
+                <span class="text-bg-danger fw-bolder text-center mt-5">
+                    Vous devez mettre à jour les informations de l'agent telles que portées sur la fiche de collecte
+                </span>
+            </div>
+        {% endif %}
+    {% endif %}
 {% endblock %}
-{#
-{% block javascripts %}
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            const editButton = document.querySelector('[data-bs-target="#editAgent"]');
-            const modalBody = document.querySelector('#editAgent .modal-body');
 
-            editButton.addEventListener('click', function () {
-                // Récupérer l'ID de l'article depuis le bouton
-                const agentId = editButton.getAttribute('data-id');
-                const url = `/agent/${agentId}/edit`; // Idéalement, tu passes dynamiquement l'ID ici /agent/${agentId}/edit
-
-                fetch(url)
-                .then(response => response.text())
-                .then(html => {
-                    modalBody.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Erreur lors du chargement du formulaire:', error);
-                });
-            });
-        });
-
-        document.addEventListener('submit', function (event) {
-            if (event.target && event.target.id === 'agent-form') {
-                //event.preventDefault(); // Empêcher la soumission classique
-
-                const form = event.target;
-                const formData = new FormData(form);
-                const action = form.getAttribute('action');
-
-                fetch(action, {
-                    method: 'POST',
-                    body: formData,
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        // Fermer la modale et afficher un message de succès
-                        document.querySelector('#editAgent .btn-close').click();
-                        alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Erreur lors de la soumission du formulaire:', error);
-                });
-            }
-        });
-    </script>
-{% endblock %}
-#}

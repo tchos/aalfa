@@ -6,6 +6,10 @@
 parameters:
 
 services:
+    security_listener:
+        class: App\EventListener\SecurityListener
+        tags:
+            - { name: kernel.event_subscriber }
     # default configuration for services in *this* file
     _defaults:
         autowire: true      # Automatically injects dependencies in your services.

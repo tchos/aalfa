@@ -1,8 +1,16 @@
 {{ form_start(form, {'action' : path('app_agent_edit',{'id':id})}) }}
     {# {{ form_widget(form) }} #}
-    <div class="row">{{ form_row(form.matricule) }}</div>
-    <div class="row">{{ form_row(form.nomAgt) }}</div>
-    <div class="row">{{ form_row(form.dateNaisAgt) }}</div>
-    <div class="row">{{ form_row(form.dateEmbAgt) }}</div>
-    <div class="row">{{ form_row(form.nb_enft_paye) }}</div>
+    <div class="row">
+        <div class="col-2">{{ form_row(form.equipe) }}</div>
+        <div class="col-2">{{ form_row(form.matricule) }}</div>
+        <div class="col">{{ form_row(form.nomAgt) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(form.dateNaisAgt) }}</div>
+        <div class="col">{{ form_row(form.dateEmbAgt) }}</div>
+    </div>
+    <div class="row">
+        <div class="col">{{ form_row(form.nb_enft_paye) }}</div>
+        <div class="col">{{ form_row(form.telephone) }}</div>
+    </div>
 {{ form_end(form) }}

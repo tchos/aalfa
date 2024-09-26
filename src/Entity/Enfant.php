@@ -8,6 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: EnfantRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['matricule','nom_enfant'], message: 'Une personne ne peut avoir 2 enfants ayant le même nom !')]
 class Enfant
 {
@@ -54,6 +55,34 @@ class Enfant
 
     #[ORM\Column(nullable: true)]
     private ?int $region_cec = null;
+
+    #[ORM\Column(length: 6, nullable: true)]
+    private ?string $codeArrondissement = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTime $createdAt = null;
+
+    /**
+     * CallBack appelé à chaque fois que l'on veut enregistrer un enfant pour
+     * prendre automatiquement la date de saisie des infos sur l'enfant .
+     */
+    #[ORM\PrePersist]
+    public function PrePersist()
+    {
+        if (empty($this->createdAt)) {
+            $this->createdAt = new \DateTime();
+        }
+    }
+
+    /**
+     * CallBack appelé à chaque fois que l'on veut mettre à jour un enfant pour
+     * prendre automatiquement la date de saisie des infos sur l'enfant .
+     */
+    #[ORM\PreUpdate]
+    public function  PreUpdate()
+    {
+        $this->createdAt = new \DateTime();
+    }
 
     public function getId(): ?int
     {
@@ -212,6 +241,30 @@ class Enfant
     public function setRegionCec(?int $region_cec): static
     {
         $this->region_cec = $region_cec;
+
+        return $this;
+    }
+
+    public function getCodeArrondissement(): ?string
+    {
+        return $this->codeArrondissement;
+    }
+
+    public function setCodeArrondissement(?string $codeArrondissement): static
+    {
+        $this->codeArrondissement = $codeArrondissement;
+
+        return $this;
+    }
+
+    public function getCreatedAt(): ?\DateTimeImmutable
+    {
+        return $this->createdAt;
+    }
+
+    public function setCreatedAt(?\DateTimeImmutable $createdAt): static
+    {
+        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste utilisateurs{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
+{% endblock %}
+
+{% block contenttitle %}Liste des utilisateurs{% endblock %}
+
+{% block body %}
+    <table id="listeusers" class="display compact" style="width:100%">
+        <thead>
+            <tr>
+                <th class="text-start">N°</th>
+                <th>Nom complet</th>
+                <th class="text-start">Téléphones</th>
+                <th class="text-start">Dernière connexion</th>
+                <th class="text-start">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% set i = 1 %}
+            {% for user in users %}
+                <tr>
+                    <td class="text-start">{{ i }}</td>
+                    <td>{{ user.fullname }}</td>
+                    <td class="text-start">{{ user.telephone }}</td>
+                    <td class="text-start">{{ user.dateDerniereConnexion|date('d-m-Y  H:i:s') }}</td>
+                    <td class="text-start">Modifier Supprimer Reinitialiser</td>
+                </tr>
+                {% set i = i + 1 %}
+            {% endfor %}
+        </tbody>
+        <tfoot>
+            <tr>
+                <th class="text-start">N°</th>
+                <th>Nom complet</th>
+                <th class="text-start">Téléphones</th>
+                <th class="text-start">Dernière connexion</th>
+                <th class="text-start">Action</th>
+            </tr>
+        </tfoot>
+    </table>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('asset/js/jquery-3.7.1.js') }}"></script>
+    <script src="{{ asset('asset/js/dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            new DataTable('#listeusers');
+        });
+    </script>
+{% endblock %}

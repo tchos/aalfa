@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Utilisateur;
 use App\Form\RegistrationFormType;
+use App\Repository\UtilisateurRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -39,6 +40,15 @@ class RegistrationController extends AbstractController
 
         return $this->render('registration/register.html.twig', [
             'registrationForm' => $form,
+        ]);
+    }
+
+    #[Route('/users', name: 'app_users')]
+    public function list(UtilisateurRepository $utilisateurRepository): Response
+    {
+        $users = $utilisateurRepository->findAll();
+        return $this->render('registration/list.html.twig',[
+            'users' => $users,
         ]);
     }
 }
