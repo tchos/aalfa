@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enfant index{% endblock %}
+
+{% block body %}
+    <h1>Enfant index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Matricule</th>
+                <th>Rang</th>
+                <th>Ordre</th>
+                <th>Nom_enfant</th>
+                <th>Date_naissance</th>
+                <th>Cec</th>
+                <th>Numero_acte</th>
+                <th>Date_acte_naissance</th>
+                <th>Nom_conjoint</th>
+                <th>Enfant_reconnu_y_n</th>
+                <th>Region_cec</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for enfant in enfants %}
+            <tr>
+                <td>{{ enfant.id }}</td>
+                <td>{{ enfant.matricule }}</td>
+                <td>{{ enfant.rang }}</td>
+                <td>{{ enfant.ordre }}</td>
+                <td>{{ enfant.nomEnfant }}</td>
+                <td>{{ enfant.dateNaissance ? enfant.dateNaissance|date('Y-m-d') : '' }}</td>
+                <td>{{ enfant.cec }}</td>
+                <td>{{ enfant.numeroActe }}</td>
+                <td>{{ enfant.dateActeNaissance ? enfant.dateActeNaissance|date('Y-m-d') : '' }}</td>
+                <td>{{ enfant.nomConjoint }}</td>
+                <td>{{ enfant.enfantReconnuYN ? 'Yes' : 'No' }}</td>
+                <td>{{ enfant.regionCec }}</td>
+                <td>
+                    <a href="{{ path('app_enfant_show', {'id': enfant.id}) }}">show</a>
+                    <a href="{{ path('app_enfant_edit', {'id': enfant.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_enfant_new') }}">Create new</a>
+{% endblock %}

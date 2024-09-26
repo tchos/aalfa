@@ -1,0 +1,66 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enfant{% endblock %}
+
+{% block body %}
+    <h1>Enfant</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ enfant.id }}</td>
+            </tr>
+            <tr>
+                <th>Matricule</th>
+                <td>{{ enfant.matricule }}</td>
+            </tr>
+            <tr>
+                <th>Rang</th>
+                <td>{{ enfant.rang }}</td>
+            </tr>
+            <tr>
+                <th>Ordre</th>
+                <td>{{ enfant.ordre }}</td>
+            </tr>
+            <tr>
+                <th>Nom_enfant</th>
+                <td>{{ enfant.nomEnfant }}</td>
+            </tr>
+            <tr>
+                <th>Date_naissance</th>
+                <td>{{ enfant.dateNaissance ? enfant.dateNaissance|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Cec</th>
+                <td>{{ enfant.cec }}</td>
+            </tr>
+            <tr>
+                <th>Numero_acte</th>
+                <td>{{ enfant.numeroActe }}</td>
+            </tr>
+            <tr>
+                <th>Date_acte_naissance</th>
+                <td>{{ enfant.dateActeNaissance ? enfant.dateActeNaissance|date('Y-m-d') : '' }}</td>
+            </tr>
+            <tr>
+                <th>Nom_conjoint</th>
+                <td>{{ enfant.nomConjoint }}</td>
+            </tr>
+            <tr>
+                <th>Enfant_reconnu_y_n</th>
+                <td>{{ enfant.enfantReconnuYN ? 'Yes' : 'No' }}</td>
+            </tr>
+            <tr>
+                <th>Region_cec</th>
+                <td>{{ enfant.regionCec }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_enfant_index') }}">back to list</a>
+
+    <a href="{{ path('app_enfant_edit', {'id': enfant.id}) }}">edit</a>
+
+    {{ include('enfant/_delete_form.html.twig') }}
+{% endblock %}

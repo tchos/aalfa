@@ -5,8 +5,6 @@
         <title>AALFA - {% block title %}{% endblock %}</title>
         <link rel="stylesheet" href="{{ asset('asset/css/all.min.css') }}">
         <link rel="stylesheet" href="{{ asset('asset/css/bootstrap.min.css') }}">
-        <link rel="stylesheet" href="{{ asset('asset/css/dataTables.bootstrap5.css') }}">
-        <link rel="stylesheet" href="{{ asset('asset/css/datatables.min.css') }}">
         {% block stylesheets %}{% endblock %}
     </head>
     <body>
@@ -14,7 +12,7 @@
         <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-5">
             <div class="row">
                 {% if app.user %}
-                    {% include '_partials/_aside.html.twig' %}
+                    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
                 {% endif %}
                 <div class="col-sm">
                     <h2>AALFA - {% block contenttitle %}{% endblock %}</h2>
@@ -28,7 +26,6 @@
         {% endif %}
         <script src="{{ asset('asset/js/all.min.js') }}"></script>
         <script src="{{ asset('asset/js/bootstrap.bundle.min.js') }}"></script>
-        <script src="{{ asset('asset/js/bootstrap.min.js') }}"></script>
         {% block javascripts %}{% endblock %}
     </body>
 </html>
