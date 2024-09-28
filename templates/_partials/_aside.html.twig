@@ -3,8 +3,8 @@
         <div class="card-header">Statistiques globales des saisies</div>
         <div class="card-body text-primary">
             <div class="row">
-                <div class="col-8"><p class="card-text">1er: </p></div>
-                <div class="col"><span class="badge text-bg-success">{{ 200000 | number_format(0,'.',' ') }}</span></div>
+                <div class="col-8"><p class="card-text">1er: {{ globalUserStats[0].fullname }}</p></div>
+                <div class="col"><span class="badge text-bg-success">{{ globalUserStats[0].nb_enfant | number_format(0,'.',' ') }}</span></div>
             </div>
             <div class="row">
                 <div class="col-8"><p class="card-text">Total: </p></div>
@@ -12,18 +12,42 @@
             </div>
         </div>
     </div>
-    <div class="card border-primary mb-3" style="max-width: 18rem;">
-        <div class="card-header">Statistiques Journalières des saisies</div>
-        <div class="card-body text-primary">
-            <div class="row">
-                <div class="col-8"><p class="card-text">1er: </p></div>
-                <div class="col"><span class="badge text-bg-primary">{{ 20000 | number_format(0,'.',' ') }}</span></div>
-            </div>
-            <div class="row">
-                <div class="col-8"><p class="card-text">Vous: </p></div>
-                <div class="col"><span class="badge text-bg-dark">{{ cpteurDailyUser | number_format(0,'.',' ') }}</span></div>
+    {% if dailyUserStats %}
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">Statistiques Journalières des saisies</div>
+            <div class="card-body text-primary">
+                <div class="row">
+                    <div class="col-8"><p class="card-text">1er: {{ dailyUserStats[0].fullname }} </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ dailyUserStats[0].nb_enfant | number_format(0,'.',' ') }}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-8"><p class="card-text">Vous: </p></div>
+                    <div class="col"><span class="badge text-bg-dark">{{ cpteurDailyUser | number_format(0,'.',' ') }}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-8"><p class="card-text">Total du jour: </p></div>
+                    <div class="col"><span class="badge text-bg-danger">{{ totalActeJour | number_format(0,'.',' ') }}</span></div>
+                </div>
             </div>
         </div>
-    </div>
+    {% else %}
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">Statistiques Journalières des saisies</div>
+            <div class="card-body text-primary">
+                <div class="row">
+                    <div class="col-8"><p class="card-text">1er: </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ 0 | number_format(0,'.',' ') }}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-8"><p class="card-text">Vous: </p></div>
+                    <div class="col"><span class="badge text-bg-dark">{{ cpteurDailyUser | number_format(0,'.',' ') }}</span></div>
+                </div>
+                <div class="row">
+                    <div class="col-8"><p class="card-text">Total du jour: </p></div>
+                    <div class="col"><span class="badge text-bg-danger">{{ totalActeJour | number_format(0,'.',' ') }}</span></div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
     <hr class="d-sm-none">
 </div>

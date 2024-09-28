@@ -5,6 +5,10 @@
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
 {% endblock %}
 
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
+
 {% block contenttitle %}Liste des utilisateurs{% endblock %}
 
 {% block body %}

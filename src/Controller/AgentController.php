@@ -47,6 +47,9 @@ class AgentController extends AbstractController
             'agent' => $agt,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 
@@ -100,6 +103,9 @@ class AgentController extends AbstractController
             'form' => $form,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 
@@ -122,6 +128,9 @@ class AgentController extends AbstractController
             'form' => $form,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 

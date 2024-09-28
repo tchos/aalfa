@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Statistiques
@@ -11,6 +12,16 @@ class Statistiques
     public function __construct(EntityManagerInterface $manager)
     {
         $this->manager = $manager;
+    }
+
+    public function getStats()
+    {
+        $nbUsers = $this->getUserCount();
+        $nbEquipes = $this->getEquipeCount();
+        $nbActeNaissance = $this->getCountActesNaissances();
+        $nbAgentRecense = $this->getAgentRecenseCount();
+
+        return compact('nbUsers', 'nbEquipes', 'nbActeNaissance', 'nbAgentRecense');
     }
 
     /**
@@ -46,6 +57,112 @@ class Statistiques
             WHERE u = :user AND e.numero_acte != ''"
         )
             ->setParameter('user', $user)
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Nombre d'acte de naissances saisis.
+     *
+     * @return int
+     */
+    public function getCountActesNaissances()
+    {
+        return $this->manager->createQuery(
+            "SELECT COUNT(e.numero_acte) AS nb_acte_nais
+             FROM App\Entity\Enfant e
+             WHERE e.numero_acte != ''"
+        )
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Nombre d'acte de naissances saisis sur la journee.
+     *
+     * @return int
+     */
+    public function getDailyCountActesNaissances()
+    {
+        return $this->manager->createQuery(
+            "SELECT COUNT(e.numero_acte) AS nb_acte_nais
+             FROM App\Entity\Enfant e
+             WHERE e.numero_acte != '' AND CURRENT_DATE() <= e.createdAt"
+        )
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Retourne les statistiques de saisies par agents de saisie.
+     *
+     * @return Utilisateur
+     */
+    public function getUserStats($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            FROM App\Entity\Utilisateur u
+            JOIN u.enfants_saisis e
+            WHERE e.numero_acte != ''
+            GROUP BY fullname
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
+     * Retourne les statistiques journalières de saisies par agents de saisie .
+     *
+     * @return Utilisateur
+     */
+    public function getDailyUserStats($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            FROM App\Entity\Utilisateur u
+            JOIN u.enfants_saisis e
+            WHERE e.numero_acte != '' AND CURRENT_DATE() <= e.createdAt
+            GROUP BY fullname
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
+     * Nombres de users inscrits
+     *
+     * @return int
+     */
+    public function getUserCount()
+    {
+        return $this->manager->createQuery("SELECT COUNT(u) FROM App\Entity\Utilisateur u")->getSingleScalarResult();
+    }
+
+    /**
+     * Nombres d'équipes inscrites
+     *
+     * @return int
+     */
+    public function getEquipeCount()
+    {
+        return $this->manager->createQuery(
+            "SELECT COUNT(DISTINCT a.equipe) AS nb_equipe 
+                    FROM App\Entity\Agent a
+                    WHERE a.equipe != ''"
+        )
+            ->getSingleScalarResult();
+    }
+
+    /**
+     * Nombres d'agents recenses
+     *
+     * @return int
+     */
+    public function getAgentRecenseCount()
+    {
+        return $this->manager->createQuery(
+            "SELECT COUNT(DISTINCT a.matricule) AS nb_agent_recense 
+                    FROM App\Entity\Agent a
+                    WHERE a.telephone != ''"
+        )
             ->getSingleScalarResult();
     }
 }
