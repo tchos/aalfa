@@ -1,7 +1,13 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}ACCUEIL{% endblock %}
+
 {% block contenttitle %}BIENVENUE SUR L'APPLICATION AALFA{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
+
 {% block body %}
 AALFA !!
 {% endblock %}

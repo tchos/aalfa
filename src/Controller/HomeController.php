@@ -17,6 +17,9 @@ class HomeController extends AbstractController
         return $this->render('home/index.html.twig', [
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 }

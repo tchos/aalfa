@@ -69,7 +69,6 @@ class EnfantController extends AbstractController
 
             return $this->redirectToRoute('app_agent_show', [
                 'id' => $enfant->getAgent()->getId(),
-                '_fragment' => 'parent'
             ], Response::HTTP_SEE_OTHER);
         }
 

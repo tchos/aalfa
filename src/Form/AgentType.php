@@ -22,7 +22,8 @@ class AgentType extends AbstractType
                 'label' => "Matricule",
                 'attr' => [
                     'placeholder' => 'Ex: 999999Z/A000000',
-                    'autofocus' => true
+                    'autofocus' => true,
+                    'readonly' => true,
                 ]
             ])
             ->add('nomAgt', TextType::class, [
@@ -40,7 +41,10 @@ class AgentType extends AbstractType
                 'widget' => 'single_text',
             ])
             ->add('nb_enft_paye', NumberType::class, [
-                'label' => "Nombre d'enfant de l'agent"
+                'label' => "Nombre d'enfant de l'agent",
+                'attr' => [
+                    'readonly' => true,
+                ]
             ])
             ->add('telephone', TextType::class, [
                 'label' => "Numéros de téléphone de l'agent"

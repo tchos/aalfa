@@ -12,7 +12,7 @@
         <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-5">
             <div class="row">
                 {% if app.user %}
-                    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+                    {% block aside %}{% endblock %}
                 {% endif %}
                 <div class="col-sm">
                     <h2>AALFA - {% block contenttitle %}{% endblock %}</h2>
