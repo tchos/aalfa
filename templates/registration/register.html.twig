@@ -1,7 +1,12 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Register{% endblock %}
+
 {% block contenttitle %}Nouvel utilisateur{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
 
 {% block body %}
 

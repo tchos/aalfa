@@ -21,7 +21,6 @@ class StatistiqueController extends AbstractController
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
             'stats' => $statistiques->getStats(),
-            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 
@@ -37,7 +36,23 @@ class StatistiqueController extends AbstractController
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
             'stats' => $statistiques->getStats(),
-            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
+
+    #[Route('/teamstats', name: 'app_statistique_team')]
+    public function teamStats(Statistiques $statistiques): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('statistique/teamstats.html.twig', [
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'stats' => $statistiques->getStats(),
+            'teamStats' => $statistiques->getTeamStats('DESC'),
+        ]);
+    }
+
 }

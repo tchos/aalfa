@@ -2,6 +2,7 @@
 
 namespace App\Service;
 
+use App\Entity\Agent;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -121,6 +122,24 @@ class Statistiques
             JOIN u.enfants_saisis e
             WHERE e.numero_acte != '' AND CURRENT_DATE() <= e.createdAt
             GROUP BY fullname
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
+     * Retourne les statistiques globales de saisies par équipe de mission .
+     *
+     * @return Agent
+     */
+    public function getTeamStats($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT a.equipe AS equipe, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            FROM App\Entity\Agent a
+            JOIN a.enfants e
+            WHERE e.numero_acte != ''
+            GROUP BY equipe
             ORDER BY nb_enfant ".$direction
         )
             ->getResult();
