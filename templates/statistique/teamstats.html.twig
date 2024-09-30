@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}STATS PAR EQUIPE{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
+{% endblock %}
+
+{% block contenttitle %}Statistiques globales des saisies par équipe !{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col">
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-9"><p class="card-text">Agents recensés: </p></div>
+                        <div class="col"><span class="badge text-bg-primary">{{ stats.nbAgentRecense | number_format(0,'.',' ') }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-9"><p class="card-text">Enfant validés: </p></div>
+                        <div class="col"><span class="badge text-bg-primary">{{ stats.nbActeNaissance | number_format(0,'.',' ') }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-9"><p class="card-text">Utilisateurs inscrits: </p></div>
+                        <div class="col"><span class="badge text-bg-primary">{{ stats.nbUsers | number_format(0,'.',' ') }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card border-primary mb-3" style="max-width: 18rem;">
+                <div class="card-header">
+                    <div class="row">
+                        <div class="col-9"><p class="card-text">Equipes inscrites: </p></div>
+                        <div class="col"><span class="badge text-bg-primary">{{ stats.nbEquipes | number_format(0,'.',' ') }}</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <hr class="mb-3">
+    <div class="row">
+        <div class="col-sm-9 mx-auto">
+            <table id="teamstats" class="display compact" style="width:100%">
+                <thead>
+                <tr>
+                    <th class="text-start">Rang</th>
+                    <th class="text-start">Equipe</th>
+                    <th class="text-start">Nombre actes collectés</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% set i = 1 %}
+                {% for team in teamStats %}
+                    <tr>
+                        <td class="text-start">{{ i }}</td>
+                        {% if i == 1 %}
+                            <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                        {% elseif i == 2 %}
+                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                        {% elseif i == 3 %}
+                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                        {% else %}
+                            <td>Equipe {{ team.equipe }}</td>
+                        {% endif %}
+                        <td class="text-start">{{ team.nb_enfant | number_format(0,'.',' ') }}</td>
+                    </tr>
+                    {% set i = i + 1 %}
+                {% else %}
+                    <span class="fw-bolder text-primary">Aucune saisie n'a encore été effectuée ce jour.</span>
+                {% endfor %}
+                </tbody>
+                <tfoot>
+                <tr>
+                    <th class="text-start">Rang</th>
+                    <th class="text-start">Equipe</th>
+                    <th class="text-start">Nombre actes collectés</th>
+                </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('asset/js/jquery-3.7.1.js') }}"></script>
+    <script src="{{ asset('asset/js/dataTables.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            new DataTable('#teamstats');
+        });
+    </script>
+{% endblock %}

@@ -9,5 +9,15 @@
 {% endblock %}
 
 {% block body %}
-AALFA !!
+    <div class="row">
+        <div class="col">
+            <a type="button" href="{{ path('app_agent_index') }}" class="btn btn-sm btn-primary">Saisir une nouvelle fiche de collecte</a>
+        </div>
+        <div class="col">
+            <a type="button" href="{{ path('app_statistique_global') }}" class="btn btn-sm btn-light">Voir les statistiques</a>
+        </div>
+        <div class="col">
+            <a type="button" href="{{ path('app_users') }}" class="btn btn-sm btn-dark">Gestion des utilisateurs</a>
+        </div>
+    </div>
 {% endblock %}

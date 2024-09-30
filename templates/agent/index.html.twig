@@ -1,7 +1,17 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}Agent index{% endblock %}
+
 {% block contenttitle %}Nouvelle fiche de collecte{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/auto_tabx/jquery-ui-1.10.0.custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('asset/auto_tabx/ajax.css') }}" />
+{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
 
 {% block body %}
     {% for label, messages in app.flashes %}
@@ -148,5 +158,23 @@
             </div>
         {% endif %}
     {% endif %}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/auto_tabx/jquery-1.9.0.js') }}"></script>
+    <script src="{{ asset('asset/auto_tabx/jquery-ui-1.10.0.custom.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#search_agent_matricule").autocomplete({
+                minLength: 4,
+                delay: 1,
+                source: '{{ asset('asset/auto_tabx/auto_mat.php') }}'
+            });
+            $('#search_agent_matricule').change(function() {
+                this.value=this.value.toUpperCase();
+                return;
+            });
+        });
+    </script>
 {% endblock %}
 
