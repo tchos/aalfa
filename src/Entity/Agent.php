@@ -23,12 +23,12 @@ class Agent
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 7)]
+    #[ORM\Column(length: 8)]
     #[Assert\Length(
-        min: 7,
-        max: 7,
-        minMessage: 'Le matricule doit avoir {{ limit }} caractères !',
-        maxMessage: 'Le matricule doit avoir {{ limit }} caractères !'
+        min: 8,
+        max: 8,
+        minMessage: 'Le minimum est de {{ limit }} caractères !',
+        maxMessage: 'Le max est de {{ limit }} caractères !'
     )]
     #[Assert\Regex(
         pattern: '/(^[A-Z][0-9]{6}$)|(^[0-9]{6}[A-Z]$)/',
@@ -44,6 +44,7 @@ class Agent
     private ?\DateTimeInterface $dateNaisAgt = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\GreaterThan(propertyPath:"dateNaisAgt")]
     private ?\DateTimeInterface $dateEmbAgt = null;
 
     #[ORM\Column]
@@ -59,10 +60,16 @@ class Agent
     private ?string $telephone = null;
 
     #[ORM\Column(nullable: true)]
-    private ?int $equipe = null;
-
-    #[ORM\Column(nullable: true)]
     private ?\DateTimeImmutable $createAt = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\Date(message: "Mauvais format de la date de collecte !")]
+    #[Assert\GreaterThan("2026-06-01", message: "La collecte ne peut être antérieure à juin 2026 !")]
+    #[Assert\LessThan('today', message: "La collecte doit être antérieure à ce jour !")]
+    private ?\DateTimeInterface $date_collecte = null;
+
+    #[ORM\ManyToOne(inversedBy: 'agents')]
+    private ?Recenseur $recenseur = null;
 
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un agent pour
@@ -198,18 +205,6 @@ class Agent
         return $this;
     }
 
-    public function getEquipe(): ?int
-    {
-        return $this->equipe;
-    }
-
-    public function setEquipe(?int $equipe): static
-    {
-        $this->equipe = $equipe;
-
-        return $this;
-    }
-
     public function getCreateAt(): ?\DateTimeImmutable
     {
         return $this->createAt;
@@ -218,6 +213,30 @@ class Agent
     public function setCreateAt(?\DateTimeImmutable $createAt): static
     {
         $this->createAt = $createAt;
+
+        return $this;
+    }
+
+    public function getDateCollecte(): ?\DateTimeInterface
+    {
+        return $this->date_collecte;
+    }
+
+    public function setDateCollecte(?\DateTimeInterface $date_collecte): static
+    {
+        $this->date_collecte = $date_collecte;
+
+        return $this;
+    }
+
+    public function getRecenseur(): ?Recenseur
+    {
+        return $this->recenseur;
+    }
+
+    public function setRecenseur(?Recenseur $recenseur): static
+    {
+        $this->recenseur = $recenseur;
 
         return $this;
     }
