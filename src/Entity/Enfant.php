@@ -6,6 +6,7 @@ use App\Repository\EnfantRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: EnfantRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -20,7 +21,7 @@ class Enfant
     #[ORM\ManyToOne(inversedBy: 'enfants')]
     private ?Agent $agent = null;
 
-    #[ORM\Column(length: 7)]
+    #[ORM\Column(length: 8)]
     private ?string $matricule = null;
 
     #[ORM\Column]
@@ -39,12 +40,21 @@ class Enfant
     private ?string $cec = null;
 
     #[ORM\Column(length: 32, nullable: true)]
+    #[Assert\Length(
+        min: 4,
+        minMessage: "Le minimum est de {{ limit }} caractères !"
+    )]
     private ?string $numero_acte = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\LessThanOrEqual("21 years", message:"L'enfant ne peut avoir plus de 21 ans !")]
     private ?\DateTimeInterface $date_acte_naissance = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
+    #[ORM\Column(length: 64, nullable: true)]
+    #[Assert\Length(
+        min: 3,
+        minMessage: "Le minimum est de {{ limit }} caractères !"
+    )]
     private ?string $nom_conjoint = null;
 
     #[ORM\Column]
