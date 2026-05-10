@@ -31,7 +31,7 @@ class Agent
         maxMessage: 'Le max est de {{ limit }} caractères !'
     )]
     #[Assert\Regex(
-        pattern: '/(^[A-Z][0-9]{6}$)|(^[0-9]{6}[A-Z]$)/',
+        pattern: '/(^[A-Z][0-9]{6}$)|(^[0-9]{7}[A-Z]$)/',
         match: true,
         message: "Le matricule {{ value }} n'est pas un matricule valide."
     )]

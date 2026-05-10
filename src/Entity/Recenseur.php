@@ -6,8 +6,11 @@ use App\Repository\RecenseurRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: RecenseurRepository::class)]
+#[UniqueEntity(fields: 'matricule', message: 'Cet agent de collecte existe déjà !!!')]
 class Recenseur
 {
     #[ORM\Id]
@@ -29,6 +32,21 @@ class Recenseur
      */
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'recenseur')]
     private Collection $agents;
+
+    #[ORM\Column(length: 8, unique: true)]
+    #[Assert\Length(
+        min: 8,
+        max: 8,
+        exactMessage: 'Le matricule doit être de {{ limit }} caractères !',
+        minMessage: 'Le minimum est de {{ limit }} caractères !',
+        maxMessage: 'Le max est de {{ limit }} caractères !'
+    )]
+    #[Assert\Regex(
+        pattern: '/(^[0-9]{7}[A-Z]$)/',
+        match: true,
+        message: "Le matricule {{ value }} n'est pas un matricule valide."
+    )]
+    private ?string $matricule = null;
 
     public function __construct()
     {
@@ -102,6 +120,23 @@ class Recenseur
                 $agent->setRecenseur(null);
             }
         }
+
+        return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->code.' - '.$this->nom;
+    }
+
+    public function getMatricule(): ?string
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(string $matricule): static
+    {
+        $this->matricule = $matricule;
 
         return $this;
     }
