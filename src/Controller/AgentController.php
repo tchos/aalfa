@@ -76,8 +76,12 @@ class AgentController extends AbstractController
     #[Route('/{id}', name: 'app_agent_show', methods: ['GET'])]
     public function show(Agent $agent, AgentRepository $agentRepository, Request $request, Statistiques $statistiques): Response
     {
+        // utilisateur connecté
         $user = $this->getUser();
         $agt = $agentRepository->findWithEnfantsId($agent);
+
+        // pour l'historisation de l'action
+        $history = new Historique();
 
         $form = $this->createForm(SearchAgentType::class);
 

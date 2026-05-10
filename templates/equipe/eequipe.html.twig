@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Equipe{% endblock %}
+
+{% block contenttitle %}Modifier l'équipe{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4 form-control-sm">{{ form_row(form.libelle) }}</div>
+        <div class="col-md-4 form-control-sm">{{ form_row(form.code) }}</div>
+    </div>
+    <div class="row form-control-sm">
+
+    </div>
+    <div class="row">
+        <div class="col-md-4 form-control-sm">{{ form_row(form.chef) }}</div>
+        <div class="col-md-4 form-control-sm">{{ form_row(form.coordonnateur) }}</div>
+    </div>
+
+    <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
+    <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-ban"></i> Annuler</button>
+    {{ form_end(form) }}
+{% endblock %}

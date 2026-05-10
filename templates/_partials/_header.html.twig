@@ -1,4 +1,4 @@
-<div class="p-5 bg-primary text-white text-center">
+<div class="p-3 bg-primary text-white text-center">
     <h1>OPERATION AALFA</h1>
     <h5>Asainissement des allocations familiales chez les agents publics et pensionnés de l'Etat du Cameroun</h5>
 </div>
@@ -29,8 +29,38 @@
                         Utilisateurs
                     </a>
                     <ul class="dropdown-menu">
-                        <li><a class="dropdown-item" href="{{ path('app_register') }}">Créer un compte</a></li>
-                        <li><a class="dropdown-item" href="{{ path('app_users') }}">Liste des users</a></li>
+                        <li><a class="dropdown-item" href="{{ path('app_register') }}">
+                                <i class="fa-solid fa-user-plus me-2"></i> Créer un compte</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ path('app_users') }}">
+                                <i class="fa-solid fa-users-line me-2"></i> Liste des users</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Agents de collecte
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_recenseur_new') }}">
+                                <i class="fa-solid fa-users-between-lines me-2"></i> Nouvel Agent de Collecte</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ path('app_recenseur_list') }}">
+                                <i class="fa-brands fa-creative-commons-remix me-2"></i> Liste des agents de collecte</a>
+                        </li>
+                    </ul>
+                </li>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle active" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        Equipes
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="{{ path('app_equipe_new') }}">
+                                <i class="fa-solid fa-users-between-lines me-2"></i> Créer une équipe</a>
+                        </li>
+                        <li><a class="dropdown-item" href="{{ path('app_equipe_list') }}">
+                                <i class="fa-brands fa-creative-commons-remix me-2"></i> Liste des équipes</a>
+                        </li>
                     </ul>
                 </li>
             {% endif %}

@@ -9,13 +9,18 @@
     </head>
     <body>
         {% include '_partials/_header.html.twig' %}
-        <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-5">
+        <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-4">
             <div class="row">
                 {% if app.user %}
                     {% block aside %}{% endblock %}
                 {% endif %}
                 <div class="col-sm">
-                    <h2>AALFA - {% block contenttitle %}{% endblock %}</h2>
+                    <div class="row">
+                        <h2 class="col">AALFA - {% block contenttitle %}{% endblock %}</h2>
+                        <div class="col text-end">
+                            {% block bouton %}{% endblock %}
+                        </div>
+                    </div>
                     <hr class="mb-5 border-primary">
                     {% block body %}{% endblock %}
                 </div>

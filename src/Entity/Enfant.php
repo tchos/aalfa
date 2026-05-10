@@ -72,6 +72,9 @@ class Enfant
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTime $createdAt = null;
 
+    #[ORM\Column]
+    private ?bool $handicapeYN = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un enfant pour
      * prendre automatiquement la date de saisie des infos sur l'enfant .
@@ -278,4 +281,17 @@ class Enfant
 
         return $this;
     }
+
+    public function isHandicapeYN(): ?bool
+    {
+        return $this->handicapeYN;
+    }
+
+    public function setHandicapeYN(bool $handicapeYN): static
+    {
+        $this->handicapeYN = $handicapeYN;
+
+        return $this;
+    }
+
 }
