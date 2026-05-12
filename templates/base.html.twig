@@ -9,7 +9,7 @@
     </head>
     <body>
         {% include '_partials/_header.html.twig' %}
-        <div class="{% if app.user %}container-fluid{% else %}container px-5{% endif %} mt-4">
+        <div class="{% if app.user %}container-fluid{% else %}container px-4{% endif %} mt-4">
             <div class="row">
                 {% if app.user %}
                     {% block aside %}{% endblock %}

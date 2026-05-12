@@ -3,6 +3,9 @@
 namespace App\Form;
 
 use App\Entity\Agent;
+use App\Entity\Recenseur;
+use Doctrine\ORM\Mapping\Entity;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
@@ -29,16 +32,23 @@ class AgentType extends AbstractType
             ->add('nomAgt', TextType::class, [
                 "label" => "Nom de l'agent",
                 "attr" => [
-                    "placeholder" => "Ex: TCHOS LOLO"
+                    "placeholder" => "Ex: TCHOS LOLO",
+                    'readonly' => true,
                 ]
             ])
             ->add('dateNaisAgt', DateType::class, [
                 'label' => "Date de naissance de l'agent",
                 'widget' => 'single_text',
+                "attr" => [
+                    'readonly' => true,
+                ]
             ])
             ->add('dateEmbAgt', DateType::class, [
                 'label' => "Date de recrutement de l'agent",
                 'widget' => 'single_text',
+                "attr" => [
+                    'readonly' => true,
+                ]
             ])
             ->add('nb_enft_paye', NumberType::class, [
                 'label' => "Nombre d'enfant de l'agent",
@@ -49,25 +59,9 @@ class AgentType extends AbstractType
             ->add('telephone', TextType::class, [
                 'label' => "Numéros de téléphone de l'agent"
             ])
-            ->add('equipe', ChoiceType::class, [
-                'label' => "N° Equipe",
-                'choices' => [
-                    '01' => '01',
-                    '02' => '02',
-                    '03' => '03',
-                    '04' => '04',
-                    '05' => '05',
-                    '06' => '06',
-                    '07' => '07',
-                    '08' => '08',
-                    '09' => '09',
-                    '10' => '10',
-                    '11' => '11',
-                    '12' => '12',
-                    '13' => '13',
-                    '14' => '14',
-                    '15' => '15',
-                ]
+            ->add('recenseur', EntityType::class, [
+                'class' => Recenseur::class,
+                'label' => "Code de l'agent de collecte",
             ])
             ->add('Enregistrer', SubmitType::class, [
                 'attr' =>['class'=>'btn btn-sm btn-primary'],

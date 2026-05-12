@@ -38,7 +38,8 @@ class EnfantController extends AbstractController
 
         return $this->render('enfant/new.html.twig', [
             'enfant' => $enfant,
-            'form' => $form,
+            'form' => $form->createView(),
+            'hasErrors' => $form->isSubmitted() && !$form->isValid(),
         ]);
     }
 
@@ -74,7 +75,8 @@ class EnfantController extends AbstractController
 
         return $this->render('enfant/edit.html.twig', [
             'enfant' => $enfant,
-            'form' => $form,
+            'form' => $form->createView(),
+            'hasErrors' => $form->isSubmitted() && !$form->isValid(),
         ]);
     }
 
