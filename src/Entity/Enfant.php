@@ -18,17 +18,17 @@ class Enfant
     public function valider_age(ExecutionContextInterface $context, $payload): void
     {
         //si aucune date de naissance, on ne renvoie rien
-        if(!$this->date_acte_naissance)
+        if(!$this->date_naissance)
             return;
 
         $today = new \DateTime();
-        $age = $today->diff($this->date_acte_naissance)->y;
+        $age = $today->diff($this->date_naissance)->y;
 
         // Si plus de 21 ans et non handicapé, on rejette
         if($age >= 21 && !$this->handicapeYN){
             $context->buildViolation(
                 "Impossible d'enregistrer un enfant déjà majeur"
-            )->atPath('date_acte_naissance')->addViolation();
+            )->atPath('date_naissance')->addViolation();
         }
     }
 
@@ -87,11 +87,11 @@ class Enfant
     #[ORM\Column(length: 6, nullable: true)]
     private ?string $codeArrondissement = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
-    private ?\DateTime $createdAt = null;
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
-    private ?bool $handicapeYN = null;
+    private ?bool $handicapeYN = false;
 
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un enfant pour
@@ -101,7 +101,7 @@ class Enfant
     public function PrePersist()
     {
         if (empty($this->createdAt)) {
-            $this->createdAt = new \DateTime();
+            $this->createdAt = new \DateTimeImmutable();
         }
     }
 
@@ -112,7 +112,7 @@ class Enfant
     #[ORM\PreUpdate]
     public function  PreUpdate()
     {
-        $this->createdAt = new \DateTime();
+        $this->createdAt = new \DateTimeImmutable();
     }
 
     public function getId(): ?int

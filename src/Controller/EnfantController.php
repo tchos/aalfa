@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Enfant;
+use App\Form\EnfantDetailsType;
 use App\Form\EnfantType;
 use App\Repository\EnfantRepository;
+use App\Service\Statistiques;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -44,18 +46,33 @@ class EnfantController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_enfant_show', methods: ['GET'])]
-    public function show(Enfant $enfant): Response
+    public function show(Enfant $enfant, Statistiques $statistiques): Response
     {
-        return $this->render('enfant/show.html.twig', [
+        //User connecté
+        $user = $this->getUser();
+
+        return $this->render('enfant/details.html.twig', [
             'enfant' => $enfant,
+            'idAgent' => $enfant->getAgent()->getId(),
+            'agtCollecte' => $enfant->getAgent()->getRecenseur()->getNom(),
+            'matriculeAgent' => $enfant->getAgent()->getMatricule(),
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 
     #[Route('/{id}/edit', name: 'app_enfant_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, Enfant $enfant, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
+        Statistiques $statistiques): Response
     {
         $form = $this->createForm(EnfantType::class, $enfant);
         $form->handleRequest($request);
+
+        //user connecté
+        $user = $this->getUser();
 
         if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer les infos saisi dans le formulaire
@@ -73,10 +90,16 @@ class EnfantController extends AbstractController
             ], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('enfant/edit.html.twig', [
+        return $this->render('enfant/update.html.twig', [
             'enfant' => $enfant,
             'form' => $form->createView(),
-            'hasErrors' => $form->isSubmitted() && !$form->isValid(),
+            'idAgent' => $enfant->getAgent()->getId(),
+            'matriculeAgent' => $enfant->getAgent()->getMatricule(),
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
         ]);
     }
 
