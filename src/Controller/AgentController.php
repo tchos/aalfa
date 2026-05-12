@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Agent;
+use App\Entity\Historique;
 use App\Form\AgentType;
 use App\Form\SearchAgentType;
 use App\Repository\AgentRepository;
@@ -60,7 +61,19 @@ class AgentController extends AbstractController
         $form = $this->createForm(AgentType::class, $agent);
         $form->handleRequest($request);
 
+        //User connecté
+        $user = $this->getUser();
+        //Pour historiser l'action du user
+        $history = new Historique();
+
         if ($form->isSubmitted() && $form->isValid()) {
+            $history->setTypeAction('UPDATE')
+                ->setAuteur($user->getFullname())
+                ->setNature('AGENT')
+                ->setClef($form->get('matricule')->getData())
+                ->setDateAction(new \DateTimeImmutable('now'));
+            ;
+
             $entityManager->persist($agent);
             $entityManager->flush();
 
@@ -69,7 +82,7 @@ class AgentController extends AbstractController
 
         return $this->render('agent/new.html.twig', [
             'agent' => $agent,
-            'form' => $form,
+            'form' => $form->createView(),
         ]);
     }
 

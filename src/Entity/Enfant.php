@@ -7,12 +7,31 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: EnfantRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[UniqueEntity(fields: ['matricule','nom_enfant'], message: 'Une personne ne peut avoir 2 enfants ayant le même nom !')]
 class Enfant
 {
+    #[Assert\Callback]
+    public function valider_age(ExecutionContextInterface $context, $payload): void
+    {
+        //si aucune date de naissance, on ne renvoie rien
+        if(!$this->date_acte_naissance)
+            return;
+
+        $today = new \DateTime();
+        $age = $today->diff($this->date_acte_naissance)->y;
+
+        // Si plus de 21 ans et non handicapé, on rejette
+        if($age >= 21 && !$this->handicapeYN){
+            $context->buildViolation(
+                "Impossible d'enregistrer un enfant déjà majeur"
+            )->atPath('date_acte_naissance')->addViolation();
+        }
+    }
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -47,7 +66,6 @@ class Enfant
     private ?string $numero_acte = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\LessThanOrEqual("21 years", message:"L'enfant ne peut avoir plus de 21 ans !")]
     private ?\DateTimeInterface $date_acte_naissance = null;
 
     #[ORM\Column(length: 64, nullable: true)]

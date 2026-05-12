@@ -124,11 +124,6 @@ class Recenseur
         return $this;
     }
 
-    public function __toString(): string
-    {
-        return $this->code.' - '.$this->nom;
-    }
-
     public function getMatricule(): ?string
     {
         return $this->matricule;
@@ -139,5 +134,10 @@ class Recenseur
         $this->matricule = $matricule;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->code.' - '.$this->equipe->getCode();
     }
 }

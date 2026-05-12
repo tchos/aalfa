@@ -25,7 +25,7 @@ class Agent
 
     #[ORM\Column(length: 8)]
     #[Assert\Length(
-        min: 8,
+        min: 7,
         max: 8,
         minMessage: 'Le minimum est de {{ limit }} caractères !',
         maxMessage: 'Le max est de {{ limit }} caractères !'
@@ -111,7 +111,6 @@ class Agent
     public function setMatricule(string $matricule): static
     {
         $this->matricule = $matricule;
-
         return $this;
     }
 
@@ -123,7 +122,6 @@ class Agent
     public function setNomAgt(string $nomAgt): static
     {
         $this->nomAgt = $nomAgt;
-
         return $this;
     }
 
@@ -135,7 +133,6 @@ class Agent
     public function setDateNaisAgt(?\DateTimeInterface $dateNaisAgt): static
     {
         $this->dateNaisAgt = $dateNaisAgt;
-
         return $this;
     }
 
@@ -147,7 +144,6 @@ class Agent
     public function setDateEmbAgt(?\DateTimeInterface $dateEmbAgt): static
     {
         $this->dateEmbAgt = $dateEmbAgt;
-
         return $this;
     }
 
@@ -159,7 +155,6 @@ class Agent
     public function setNbEnftPaye(int $nb_enft_paye): static
     {
         $this->nb_enft_paye = $nb_enft_paye;
-
         return $this;
     }
 
@@ -201,7 +196,6 @@ class Agent
     public function setTelephone(?string $telephone): static
     {
         $this->telephone = $telephone;
-
         return $this;
     }
 
@@ -213,7 +207,6 @@ class Agent
     public function setCreateAt(?\DateTimeImmutable $createAt): static
     {
         $this->createAt = $createAt;
-
         return $this;
     }
 
@@ -225,7 +218,6 @@ class Agent
     public function setDateCollecte(?\DateTimeInterface $date_collecte): static
     {
         $this->date_collecte = $date_collecte;
-
         return $this;
     }
 
@@ -237,7 +229,6 @@ class Agent
     public function setRecenseur(?Recenseur $recenseur): static
     {
         $this->recenseur = $recenseur;
-
         return $this;
     }
 }

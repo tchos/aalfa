@@ -45,7 +45,7 @@
                     <th scope="col" class="text-center">Date Emb.</th>
                     <th scope="col" class="text-center">Nbre Enft payé</th>
                     <th scope="col" class="text-center">Téléphones</th>
-                    <th scope="col" class="text-center">Equipe</th>
+                    <th scope="col" class="text-center">Agt Collecte</th>
                     <th scope="col" class="text-center">Action</th>
                 </tr>
             </thead>
@@ -57,7 +57,7 @@
                     <td class="text-center">{{ agent.dateEmbAgt|date('d-m-Y') }}</td>
                     <td class="text-center">{{ agent.NbEnftPaye }}</td>
                     <td class="text-center">{{ agent.telephone }}</td>
-                    <td class="text-center">{{ agent.equipe }}</td>
+                    <td class="text-center">{{ agent.recenseur ? agent.recenseur.code : '-' }}</td>
                     <td class="text-center">
                         {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
                         <!-- Button to Open the Modal -->
@@ -93,7 +93,7 @@
                 </tr>
             </tbody>
         </table>
-        {% if agent.equipe and agent.telephone  %}
+        {% if agent.recenseur and agent.recenseur.code and agent.telephone %}
             <div class="row mx-1">
                 <span class="text-bg-dark fw-bolder text-center mt-5">Enfants payés au fichier solde</span>
             </div>
@@ -101,10 +101,12 @@
                 <thead>
                     <tr>
                         <th scope="col">Noms</th>
-                        <th scope="col">Naissance</th>
+                        <th scope="col-1">Naissance</th>
+                        <th scope="col-1">N° Acte Nais.</th>
                         <th scope="col">Nom conjoint</th>
                         <th scope="col" class="text-center">Reconnu (O/N) ?</th>
-                        <th scope="col" class="text-center">Action</th>
+                        <th scope="col" class="text-center">Handicapé (O/N) ?</th>
+                        <th scope="col-1" class="text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -112,8 +114,10 @@
                         <tr>
                             <td>{{ enfant.nomEnfant }}</td>
                             <td>{{ enfant.dateNaissance|date('d-m-Y') }}</td>
+                            <td>{{ enfant.numeroActe }}</td>
                             <td>{{ enfant.nomConjoint }}</td>
                             <td class="text-center">{% if enfant.isEnfantReconnuYN == false %}NON{% else  %}OUI{% endif %}</td>
+                            <td class="text-center">{% if enfant.isHandicapeYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">
                                 <button href="{{ path('app_enfant_edit', {'id': enfant.id}) }}" type="button"
                                         class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}"
@@ -129,7 +133,7 @@
 
                                             <!-- Modal Header -->
                                             <div class="modal-header bg-success">
-                                                <h4 class="modal-title fw-bolder">Modifier les informations sur l'enfant {{ i }}</h4>
+                                                <h4 class="modal-title fw-bolder">Modifier les informations sur l'enfant {{ enfant.nomEnfant }}</h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
 
