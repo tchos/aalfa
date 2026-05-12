@@ -7,6 +7,8 @@ use App\Entity\Enfant;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
@@ -52,6 +54,10 @@ class EnfantType extends AbstractType
                 'attr' => [
                     'placeholder' => 'Ex: DIOS BENEDICTO PACIFICO',
                 ]
+            ])
+            ->add('handicapeYN', CheckboxType::class, [
+                'label' => "Handicapé (Y/N) ?",
+                'required' => false,
             ])
             ->add('Enregistrer', SubmitType::class, [
                 'attr' =>['class'=>'btn btn-sm btn-success'],

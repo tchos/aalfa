@@ -1,0 +1,148 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Détails Enfant{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser
+    } %}
+{% endblock %}
+
+{% block contenttitle %}{% endblock %}
+
+{% block bouton %}
+    <a class="btn btn-success btn-sm"
+       href="{{ path('app_agent_show', {'id': idAgent}) }}">
+        <i class="bi bi-arrow-left"></i>
+        Retour aux enfants de {{ matriculeAgent }}
+    </a>
+{% endblock %}
+
+{% block body %}
+    <div class="container-fluid mt-3">
+        <div class="card shadow-sm border-0">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">
+                    Fiche détaillée sur l'enfant {{ enfant.nomEnfant }}
+                </h5>
+            </div>
+            <div class="card-body">
+                <!-- INFORMATIONS GENERALES -->
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <label class="fw-bold text-muted">Matricule</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.matricule }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold text-muted">Rang</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.rang }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold text-muted">Ordre</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.ordre }}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <label class="fw-bold text-muted">Code CEC</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.cec ?: '-' }}
+                        </div>
+                    </div>
+                </div>
+                <!-- IDENTITE -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Nom de l'enfant</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.nomEnfant }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Nom du parent</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.agent ?: '-' }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Nom du conjoint</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.nomConjoint ?: '-' }}
+                        </div>
+                    </div>
+                </div>
+                <!-- DATES -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Date de naissance</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.dateNaissance ? enfant.dateNaissance|date('d/m/Y') : '-' }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Numéro acte naissance</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.numeroActe ?: '-' }}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Date acte naissance</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.dateActeNaissance ? enfant.dateActeNaissance|date('d/m/Y') : '-' }}
+                        </div>
+                    </div>
+                </div>
+                <!-- STATUT -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Enfant reconnu</label>
+                        <div>
+                            {% if enfant.enfantReconnuYN %}
+                                <span class="badge bg-success">Oui</span>
+                            {% else %}
+                                <span class="badge bg-danger">Non</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Handicapé</label>
+                        <div>
+                            {% if enfant.handicapeYN %}
+                                <span class="badge bg-warning text-dark">Oui</span>
+                            {% else %}
+                                <span class="badge bg-secondary">Non</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Code arrondissement</label>
+                        <div class="form-control bg-light">{{ enfant.codeArrondissement ?: '-' }}</div>
+                    </div>
+                </div>
+                <!-- AGENTS -->
+                <div class="row mb-4">
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Agent de collecte</label>
+                        <div class="form-control bg-light">{{ agtCollecte ?: '-' }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Agent de saisie</label>
+                        <div class="form-control bg-light">{{ enfant.agentSaisie ?: '-' }}</div>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="fw-bold text-muted">Date de saisie</label>
+                        <div class="form-control bg-light">
+                            {{ enfant.createdAt ? enfant.createdAt|date('d/m/Y H:i') : '-' }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

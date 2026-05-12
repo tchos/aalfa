@@ -119,13 +119,26 @@
                             <td class="text-center">{% if enfant.isEnfantReconnuYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">{% if enfant.isHandicapeYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">
-                                <button href="{{ path('app_enfant_edit', {'id': enfant.id}) }}" type="button"
-                                        class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}"
-                                        data-bs-toggle="modal" data-bs-target="#editEnfant-{{ enfant.id }}" data-id="{{ enfant.id }}">
-                                    {% if enfant.isEnfantReconnuYN == true %}Le modifier{% else %}Renseigner{% endif %}
-                                    {% set i = enfant.id %}
-                                </button>
+                                {% if enfant.isEnfantReconnuYN == true %}
+                                    <a href="{{ path('app_enfant_show', {'id': enfant.id}) }}"
+                                       class="btn btn-sm btn-primary">
+                                        Details
+                                    </a>
+                                    {#
+                                        <button href="{{ path('app_enfant_edit', {'id': enfant.id}) }}" type="button"
+                                                class="btn btn-sm btn-primary"
+                                                data-bs-toggle="modal" data-bs-target="#editEnfant-{{ enfant.id }}" data-id="{{ enfant.id }}">
+                                            Voir
+                                            {% set i = enfant.id %}
+                                        </button>
+                                    #}
+                                {% endif %}
+                                <a href="{{ path('app_enfant_edit', {'id': enfant.id}) }}"
+                                    class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}">
+                                    {% if enfant.isEnfantReconnuYN == true %}Modifier{% else %}Renseigner{% endif %}
+                                </a>
 
+                                {#
                                 <!-- La fenêtre modale qui affichera le formulaire -->
                                 <div class="modal" id="editEnfant-{{ enfant.id }}">
                                     <div class="modal-dialog modal-lg">
@@ -133,13 +146,13 @@
 
                                             <!-- Modal Header -->
                                             <div class="modal-header bg-success">
-                                                <h4 class="modal-title fw-bolder">Modifier les informations sur l'enfant {{ enfant.nomEnfant }}</h4>
+                                                <h4 class="modal-title fw-bolder">Informations sur l'enfant {{ enfant.nomEnfant }}</h4>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                             </div>
 
                                             <!-- Modal body -->
                                             <div class="modal-body text-start">
-                                                {{render(controller('App\\Controller\\EnfantController::edit',{'id': enfant.id})) }}
+                                                {{render(controller('App\\Controller\\EnfantController::show',{'id': enfant.id})) }}
                                             </div>
 
                                             <!-- Modal footer -->
@@ -148,7 +161,7 @@
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> #}
                             </td>
                         </tr>
                     {% endfor %}

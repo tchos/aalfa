@@ -231,4 +231,7 @@ class Agent
         $this->recenseur = $recenseur;
         return $this;
     }
+
+    public function __toString(): string {  return $this->nomAgt; }
+
 }

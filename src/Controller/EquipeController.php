@@ -24,7 +24,7 @@ class EquipeController extends AbstractController
         //On recupère le user connecté
         $user = $this->getUser();
 
-        return $this->render('equipe/lequipe.html.twig', [
+        return $this->render('equipe/index.html.twig', [
             'equipes' => $equipeRepository->findAll(),
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
@@ -65,7 +65,7 @@ class EquipeController extends AbstractController
             return $this->redirectToRoute('app_equipe_new');
         }
 
-        return $this->render('equipe/aequipe.html.twig', [
+        return $this->render('equipe/new.html.twig', [
             'form' => $form->createView(),
             'equipe' => $equipe,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
@@ -107,7 +107,7 @@ class EquipeController extends AbstractController
             return $this->redirectToRoute('app_equipe_list');
         }
 
-        return $this->render('equipe/aequipe.html.twig', [
+        return $this->render('equipe/edit.html.twig', [
             'form' => $form->createView(),
             'equipe' => $equipe,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),

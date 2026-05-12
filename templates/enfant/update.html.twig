@@ -1,0 +1,41 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Enfant{% endblock %}
+
+{% block contenttitle %}Mettre à jour un enfant{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+{% endblock %}
+
+{% block bouton %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_agent_show', {'id': idAgent}) }}"
+       role="button">Revenir à Liste des enfants de {{ matriculeAgent }}
+    </a>
+{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-8">{{ form_row(form.nom_enfant) }}</div>
+            <div class="col">{{ form_row(form.date_naissance) }}</div>
+        </div>
+        <div class="row">
+            <div class="col">{{ form_row(form.cec) }}</div>
+            <div class="col">{{ form_row(form.codeArrondissement) }}</div>
+            <div class="col">{{ form_row(form.numero_acte) }}</div>
+            <div class="col">{{ form_row(form.date_acte_naissance) }}</div>
+        </div>
+        <div class="row">
+            <div class="col">{{ form_row(form.nom_conjoint) }}</div>
+            <div class="col mt-5">{{ form_row(form.handicapeYN) }}</div>
+        </div>
+    {{ form_end(form) }}
+{% endblock %}
