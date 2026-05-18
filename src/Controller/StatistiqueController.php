@@ -55,4 +55,20 @@ class StatistiqueController extends AbstractController
         ]);
     }
 
+    #[Route('/recenseurstats', name: 'app_statistique_recenseur')]
+    public function recenseurStats(Statistiques $statistiques): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('statistique/recenseurstats.html.twig', [
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'stats' => $statistiques->getStats(),
+            'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
+        ]);
+    }
+
 }

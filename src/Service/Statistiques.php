@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Agent;
+use App\Entity\Recenseur;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -135,11 +136,33 @@ class Statistiques
     public function getTeamStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT a.equipe AS equipe, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            "SELECT i.code AS equipe, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Agent a
             JOIN a.enfants e
+            JOIN a.recenseur r
+            JOIN r.equipe i
             WHERE e.numero_acte != ''
             GROUP BY equipe
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
+     * Retourne les statistiques globales de saisies par agent de collecte .
+     *
+     * @return Recenseur
+     */
+    public function getRecenseurStats($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT r.nom AS nom, i.libelle AS equipe, COUNT(e.numero_acte) AS nb_enfant
+            FROM App\Entity\Agent a
+            JOIN a.enfants e
+            JOIN a.recenseur r
+            JOIN r.equipe i
+            WHERE e.numero_acte != ''
+            GROUP BY nom, equipe
             ORDER BY nb_enfant ".$direction
         )
             ->getResult();
@@ -163,9 +186,11 @@ class Statistiques
     public function getEquipeCount()
     {
         return $this->manager->createQuery(
-            "SELECT COUNT(DISTINCT a.equipe) AS nb_equipe 
+            "SELECT COUNT(DISTINCT e.code) AS nb_equipe 
                     FROM App\Entity\Agent a
-                    WHERE a.equipe != ''"
+                    JOIN a.recenseur r
+                    JOIN r.equipe e
+                    WHERE e.code != ''"
         )
             ->getSingleScalarResult();
     }
