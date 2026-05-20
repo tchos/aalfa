@@ -24,7 +24,7 @@ class AgentType extends AbstractType
             ->add('matricule', TextType::class, [
                 'label' => "Matricule",
                 'attr' => [
-                    'placeholder' => 'Ex: 999999Z/A000000',
+                    'placeholder' => 'Ex: 1234567Z',
                     'autofocus' => true,
                     'readonly' => true,
                 ]

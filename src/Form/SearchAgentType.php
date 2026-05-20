@@ -20,17 +20,17 @@ class SearchAgentType extends AbstractType
                 "label" => "Matricule",
                 'constraints' => [
                     new Length([
-                        'min' => 7,
-                        'max' => 7,
-                        'exactMessage' => 'Le champ doit contenir exactement 7 caractères.',
+                        'min' => 8,
+                        'max' => 8,
+                        'exactMessage' => 'Le champ doit contenir exactement 8 caractères.',
                     ]),
                     new Regex([
-                        'pattern' => '/^[A-Za-z]\d{6}$|^\d{6}[A-Za-z]$/',
+                        'pattern' => '/^[A-Za-z]\d{7}$|^\d{7}[A-Za-z]$/',
                         'message' => 'Le matricule entré n\'est pas au format validé.',
                     ]),
                 ],
                 'attr' => [
-                    'placeholder' => 'Saisir le matricule ici. Ex: 999999Z/A000000',
+                    'placeholder' => 'Saisir le matricule ici. Ex: 7654321A',
                     'autofocus' => true
                 ]
             ])

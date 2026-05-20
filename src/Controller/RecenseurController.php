@@ -25,7 +25,7 @@ class RecenseurController extends AbstractController
         //On recupère le user connecté
         $user = $this->getUser();
 
-        return $this->render('recenseur/lrecenseur.html.twig', [
+        return $this->render('recenseur/index.html.twig', [
             'recenseurs' => $recenseurRepository->findAll(),
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
@@ -68,7 +68,7 @@ class RecenseurController extends AbstractController
             return $this->redirectToRoute('app_recenseur_new');
         }
 
-        return $this->render('recenseur/arecenseur.html.twig', [
+        return $this->render('recenseur/new.html.twig', [
             'form' => $form->createView(),
             'recenseur' => $recenseur,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
@@ -110,7 +110,7 @@ class RecenseurController extends AbstractController
             return $this->redirectToRoute('app_recenseur_new');
         }
 
-        return $this->render('recenseur/arecenseur.html.twig', [
+        return $this->render('recenseur/new.html.twig', [
             'form' => $form->createView(),
             'recenseur' => $recenseur,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),

@@ -18,7 +18,7 @@ class RecenseurType extends AbstractType
             ->add('matricule', TextType::class, [
                 'label' => 'Matricule',
                 'attr' => [
-                    'placeholder' => 'EX: 0999999Z',
+                    'placeholder' => 'EX: 1111111A',
                     'autofocus' => true,
                 ]
             ])
