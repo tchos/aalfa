@@ -213,3 +213,15 @@ SHOW WARNINGS LIMIT 20;
 SELECT COUNT(*) AS NOMBRE_AGENTS FROM agent;
 
 SELECT COUNT(*) AS NOMBRE_ENFANTS FROM enfant;
+
+SELECT 
+    a.matricule,
+    a.nom_agt,
+    e.nom_enfant,
+    e.date_naissance,
+    e.rang,
+    e.handicape_yn
+FROM agent a
+INNER JOIN enfant e
+    ON a.id = e.agent_id
+WHERE a.matricule = '1077334D';
