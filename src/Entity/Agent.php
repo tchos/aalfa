@@ -25,13 +25,13 @@ class Agent
 
     #[ORM\Column(length: 8)]
     #[Assert\Length(
-        min: 7,
+        min: 8,
         max: 8,
         minMessage: 'Le minimum est de {{ limit }} caractères !',
         maxMessage: 'Le max est de {{ limit }} caractères !'
     )]
     #[Assert\Regex(
-        pattern: '/(^[A-Z][0-9]{6}$)|(^[0-9]{7}[A-Z]$)/',
+        pattern: '/(^[A-Z][0-9]{7}$)|(^[0-9]{7}[A-Z]$)/',
         match: true,
         message: "Le matricule {{ value }} n'est pas un matricule valide."
     )]
