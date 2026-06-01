@@ -71,6 +71,15 @@ class Agent
     #[ORM\ManyToOne(inversedBy: 'agents')]
     private ?Recenseur $recenseur = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $nb_enft_collecte = null;
+
+    #[ORM\Column]
+    private ?bool $saisie_terminee = false;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $date_validation = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un agent pour
      * prendre automatiquement la date de saisie des infos sur l'agent .
@@ -234,4 +243,46 @@ class Agent
 
     public function __toString(): string {  return $this->nomAgt; }
 
+    public function getNbEnftCollecte(): ?int
+    {
+        return $this->nb_enft_collecte;
+    }
+
+    public function setNbEnftCollecte(?int $nb_enft_collecte): static
+    {
+        $this->nb_enft_collecte = $nb_enft_collecte;
+
+        return $this;
+    }
+
+    public function getNbEnfantsRenseignes(): int
+    {
+        return $this->enfants
+            ->filter(fn($e) => $e->isEnfantReconnuYN())
+            ->count();
+    }
+
+    public function isSaisieTerminee(): ?bool
+    {
+        return $this->saisie_terminee;
+    }
+
+    public function setSaisieTerminee(bool $saisie_terminee): static
+    {
+        $this->saisie_terminee = $saisie_terminee;
+
+        return $this;
+    }
+
+    public function getDateValidation(): ?\DateTimeInterface
+    {
+        return $this->date_validation;
+    }
+
+    public function setDateValidation(?\DateTimeInterface $date_validation): static
+    {
+        $this->date_validation = $date_validation;
+
+        return $this;
+    }
 }

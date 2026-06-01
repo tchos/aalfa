@@ -18,17 +18,6 @@ class SearchAgentType extends AbstractType
         $builder
             ->add('matricule', TextType::class, [
                 "label" => "Matricule",
-                'constraints' => [
-                    new Length([
-                        'min' => 8,
-                        'max' => 8,
-                        'exactMessage' => 'Le champ doit contenir exactement 8 caractères.',
-                    ]),
-                    new Regex([
-                        'pattern' => '/^[A-Za-z]\d{7}$|^\d{7}[A-Za-z]$/',
-                        'message' => 'Le matricule entré n\'est pas au format validé.',
-                    ]),
-                ],
                 'attr' => [
                     'placeholder' => 'Saisir le matricule ici. Ex: 7654321A',
                     'autofocus' => true

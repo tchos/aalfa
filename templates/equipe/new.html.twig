@@ -30,6 +30,6 @@
         </div>
 
         <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
-        <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-ban"></i> Annuler</button>
+        <a class="btn btn-sm btn-dark" href="{{ path('app_equipe_list') }}"><i class="fa-solid fa-ban"></i> Annuler</a>
     {{ form_end(form) }}
 {% endblock %}

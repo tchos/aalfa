@@ -74,7 +74,13 @@ class EnfantController extends AbstractController
         //user connecté
         $user = $this->getUser();
 
-        if ($form->isSubmitted() && $form->isValid()) {
+        if ($enfant->getAgent()->isSaisieTerminee()) {
+
+            throw $this->createAccessDeniedException(
+                'La saisie de cet agent est déjà terminée.'
+            );
+        }
+        else if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer les infos saisi dans le formulaire
             $data = $form->getData();
             // dd($data->getCec());

@@ -60,6 +60,8 @@ class EnfantType extends AbstractType
                 'required' => false,
             ])
             ->add('Enregistrer', SubmitType::class, [
+                'label' => "<i class='fa-regular fa-bookmark'></i> Enregistrer",
+                'label_html' => true,
                 'attr' =>['class'=>'btn btn-sm btn-success'],
             ])
         ;

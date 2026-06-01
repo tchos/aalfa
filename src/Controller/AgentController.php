@@ -31,7 +31,8 @@ class AgentController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer le matricule saisi dans le formulaire
             $data = $form->getData();
-            $mat = $data['matricule'];
+            $pers = $data['matricule'];
+            $mat = explode('-', $pers)[0];
 
             $agt = $agentRepository->findWithEnfants($mat);
             if (!$agt) {
@@ -159,5 +160,29 @@ class AgentController extends AbstractController
             $entityManager->flush();
         }
         return $this->redirectToRoute('app_agent_index', [], Response::HTTP_SEE_OTHER);
+    }
+
+    #[Route('/agent/{id}/terminer-saisie', name: 'app_agent_terminer_saisie')]
+    public function terminerSaisie(Agent $agent, EntityManagerInterface $em): Response
+    {
+        // On verifie si le nbre d'enft collectés a effectivement été saisi
+        if ($agent->getNbEnftCollecte() > $agent->getNbEnfantsRenseignes())
+        {
+            $reste = $agent->getNbEnftCollecte() - $agent->getNbEnfantsRenseignes();
+
+            $this->addFlash('danger', "Impossible de terminer la saisie.
+                Il reste $reste enfant(s) à renseigner."
+            );
+
+            return $this->redirectToRoute('app_agent_show', ['id' => $agent->getId()]);
+        }
+
+        $agent->setSaisieTerminee(true);
+        $agent->setDateValidation(new \DateTime('now'));
+
+        $em->flush();
+
+        $this->addFlash('success', 'Saisie validée avec succès.');
+        return $this->redirectToRoute('app_agent_index');
     }
 }

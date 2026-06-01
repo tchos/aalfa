@@ -12,9 +12,11 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 class RegistrationController extends AbstractController
 {
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher,
                              EntityManagerInterface $entityManager, Statistiques $statistiques): Response
@@ -53,6 +55,7 @@ class RegistrationController extends AbstractController
         ]);
     }
 
+    #[IsGranted("ROLE_ADMIN")]
     #[Route('/users', name: 'app_users')]
     public function list(UtilisateurRepository $utilisateurRepository, Statistiques $statistiques): Response
     {

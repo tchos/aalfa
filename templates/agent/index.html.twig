@@ -43,9 +43,10 @@
                     <th scope="col">Nom complet</th>
                     <th scope="col" class="text-center">Naissance</th>
                     <th scope="col" class="text-center">Date Emb.</th>
-                    <th scope="col" class="text-center">Nbre Enft payé</th>
+                    <th scope="col" class="text-center">Enfts payés</th>
                     <th scope="col" class="text-center">Téléphones</th>
                     <th scope="col" class="text-center">Agt Collecte</th>
+                    <th scope="col" class="text-center">Enfts Collectés</th>
                     <th scope="col" class="text-center">Action</th>
                 </tr>
             </thead>
@@ -58,13 +59,20 @@
                     <td class="text-center">{{ agent.NbEnftPaye }}</td>
                     <td class="text-center">{{ agent.telephone }}</td>
                     <td class="text-center">{{ agent.recenseur ? agent.recenseur.code : '-' }}</td>
+                    <td class="text-center">{{ agent.NbEnftCollecte }}</td>
                     <td class="text-center">
-                        {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
-                        <!-- Button to Open the Modal -->
-                        <button href="{{ path('app_agent_edit', {'id': agent.id}) }}" type="button" class="btn btn-sm btn-primary"
-                                data-bs-toggle="modal" data-bs-target="#editAgent" data-id="{{ agent.id }}">
-                            Modifier l'agent
-                        </button>
+                        {% if agent.saisieTerminee == false %}
+                            {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
+                            <!-- Button to Open the Modal -->
+                            <button href="{{ path('app_agent_edit', {'id': agent.id}) }}" type="button" class="btn btn-sm btn-primary"
+                                    data-bs-toggle="modal" data-bs-target="#editAgent" data-id="{{ agent.id }}">
+                                Modifier l'agent
+                            </button>
+                        {% else %}
+                            <button class="btn btn-sm btn-secondary" disabled>
+                                Saisie validée
+                            </button>
+                        {% endif %}
 
                         <!-- La fenêtre modale qui affichera le formulaire -->
                         <div class="modal" id="editAgent">
@@ -93,7 +101,7 @@
                 </tr>
             </tbody>
         </table>
-        {% if agent.recenseur and agent.recenseur.code and agent.telephone %}
+        {% if agent.recenseur and agent.recenseur.code and agent.telephone and agent.nbEnftCollecte %}
             <div class="row mx-1">
                 <span class="text-bg-dark fw-bolder text-center mt-5">Enfants payés au fichier solde</span>
             </div>
@@ -133,11 +141,16 @@
                                         </button>
                                     #}
                                 {% endif %}
-                                <a href="{{ path('app_enfant_edit', {'id': enfant.id}) }}"
-                                    class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}">
-                                    {% if enfant.isEnfantReconnuYN == true %}Modifier{% else %}Renseigner{% endif %}
-                                </a>
-
+                                {% if agent.saisieTerminee == false %}
+                                    <a href="{{ path('app_enfant_edit', {'id': enfant.id}) }}"
+                                       class="btn btn-sm btn-{% if enfant.isEnfantReconnuYN == false %}warning{% else %}success{% endif %}">
+                                        {% if enfant.isEnfantReconnuYN == true %}Modifier{% else %}Renseigner{% endif %}
+                                    </a>
+                                {% else %}
+                                    <button class="btn btn-sm btn-secondary" disabled>
+                                        Saisie validée
+                                    </button>
+                                {% endif %}
                                 {#
                                 <!-- La fenêtre modale qui affichera le formulaire -->
                                 <div class="modal" id="editEnfant-{{ enfant.id }}">
@@ -167,6 +180,19 @@
                     {% endfor %}
                 </tbody>
             </table>
+            <div class="mt-4">
+                {% if agent.saisieTerminee == false %}
+                    <a href="{{ path('app_agent_terminer_saisie', {'id': agent.id}) }}"
+                       class="btn btn-danger">
+                        Terminer la saisie
+                    </a>
+                {% else %}
+                    <a href="{{ path('app_agent_index') }}"
+                       class="btn btn-sm btn-success">
+                        Nouvelle fiche de collecte
+                    </a>
+                {% endif %}
+            </div>
         {% else %}
             <div class="row mx-1">
                 <span class="text-bg-danger fw-bolder text-center mt-5">
@@ -192,6 +218,25 @@
                 return;
             });
         });
+    </script>
+    <script>
+
+        let totalCollecte = {{ totalCollecte|default(0) }};
+        let totalRenseigne = {{ totalRenseigne|default(0) }};
+
+        window.addEventListener('beforeunload', function (e) {
+
+            if (totalRenseigne < totalCollecte) {
+
+                e.preventDefault();
+
+                e.returnValue =
+                    'Tous les enfants collectés ne sont pas encore renseignés.';
+
+            }
+
+        });
+
     </script>
 {% endblock %}
 
