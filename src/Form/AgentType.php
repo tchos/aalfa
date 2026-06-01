@@ -9,6 +9,7 @@ use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
+use Symfony\Component\Form\Extension\Core\Type\IntegerType;
 use Symfony\Component\Form\Extension\Core\Type\NumberType;
 use Symfony\Component\Form\Extension\Core\Type\ResetType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
@@ -54,6 +55,14 @@ class AgentType extends AbstractType
                 'label' => "Nombre d'enfant de l'agent",
                 'attr' => [
                     'readonly' => true,
+                ]
+            ])
+            ->add('nb_enft_collecte', IntegerType::class, [
+                'label' => "Total des enfants collectés",
+                'attr' => [
+                    'min' => 0,
+                    'max' => 42,
+                    'required' => true,
                 ]
             ])
             ->add('telephone', TextType::class, [

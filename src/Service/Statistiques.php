@@ -100,7 +100,7 @@ class Statistiques
     public function getUserStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            "SELECT u.fullname AS fullname, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Utilisateur u
             JOIN u.enfants_saisis e
             WHERE e.numero_acte != ''
@@ -118,7 +118,7 @@ class Statistiques
     public function getDailyUserStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.numero_acte) AS nb_enfant
+            "SELECT u.fullname AS fullname, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Utilisateur u
             JOIN u.enfants_saisis e
             WHERE e.numero_acte != '' AND CURRENT_DATE() <= e.createdAt

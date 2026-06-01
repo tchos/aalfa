@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Authentication\AuthenticationSuccessHandlerInterface;
@@ -12,8 +13,18 @@ use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 class SecurityController extends AbstractController
 {
     #[Route(path: '/login', name: 'app_login')]
-    public function login(AuthenticationUtils $authenticationUtils, EntityManagerInterface $manager): Response
+    public function login(AuthenticationUtils $authenticationUtils, EntityManagerInterface $manager,
+        Request $request): Response
     {
+        // Si l'utilisateur vient d'une session expirée
+        if (!$this->getUser() && $request->hasPreviousSession()) {
+
+            $this->addFlash(
+                'warning',
+                'Votre session a expiré après 2 minutes d’inactivité.'
+            );
+        }
+
         if ($this->getUser()) {
             $user = $this->getUser()->setDateDerniereConnexion(new \DateTime());
             // On enregistre la dernière date de connexion de chaque utilisateur dans la bd
