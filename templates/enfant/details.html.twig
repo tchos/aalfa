@@ -5,7 +5,8 @@
 {% block aside %}
     {% include '_partials/_aside.html.twig' with {
         'cpteurDailyUser': compteurUserJour,
-        'cpteurUser': compteurUser
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
     } %}
 {% endblock %}
 
@@ -51,7 +52,7 @@
                     <div class="col-md-3">
                         <label class="fw-bold text-muted">Code CEC</label>
                         <div class="form-control bg-light">
-                            {{ enfant.cec ?: '-' }}
+                            {{ enfant.centreEtatCivil.codeCec ?: '-' }}
                         </div>
                     </div>
                 </div>

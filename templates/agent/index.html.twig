@@ -10,7 +10,11 @@
 {% endblock %}
 
 {% block aside %}
-    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
 {% endblock %}
 
 {% block body %}
@@ -220,19 +224,14 @@
         });
     </script>
     <script>
-
         let totalCollecte = {{ totalCollecte|default(0) }};
         let totalRenseigne = {{ totalRenseigne|default(0) }};
 
         window.addEventListener('beforeunload', function (e) {
 
             if (totalRenseigne < totalCollecte) {
-
                 e.preventDefault();
-
-                e.returnValue =
-                    'Tous les enfants collectés ne sont pas encore renseignés.';
-
+                e.returnValue = 'Tous les enfants collectés ne sont pas encore renseignés.';
             }
         });
     </script>

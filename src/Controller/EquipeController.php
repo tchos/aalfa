@@ -31,6 +31,7 @@ class EquipeController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
     }
 
@@ -73,6 +74,7 @@ class EquipeController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
     }
 
@@ -115,6 +117,7 @@ class EquipeController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
     }
 

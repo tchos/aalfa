@@ -6,7 +6,11 @@
 {% endblock %}
 
 {% block aside %}
-    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
 {% endblock %}
 
 {% block contenttitle %}Liste des équipes de collecte{% endblock %}

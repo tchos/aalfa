@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Agent;
+use App\Entity\CentreEtatCivil;
 use App\Entity\Enfant;
 use App\Entity\Utilisateur;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -27,16 +28,12 @@ class EnfantType extends AbstractType
                 'label' => 'Date de naissance',
                 'widget' => 'single_text',
             ])
-            ->add('cec', TextType::class, [
-                'label' => 'Code CEC',
+            ->add('code_cec', TextType::class, [
+                'label' => "Code Centre d'Etat Civil",
+                'mapped' => false,
                 'attr' => [
-                    'placeholder' => 'Ex: C162',
-                ]
-            ])
-            ->add('codeArrondissement', TextType::class, [
-                'label' => 'Code arrondissement du CEC',
-                'attr' => [
-                    'placeholder' => 'Ex: A093',
+                    'placeholder' => 'Ex: ES1001',
+                    'autocomplete' => 'off'
                 ]
             ])
             ->add('numero_acte', TextType::class, [

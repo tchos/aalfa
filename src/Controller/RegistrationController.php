@@ -51,6 +51,7 @@ class RegistrationController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
         ]);
     }
@@ -69,6 +70,7 @@ class RegistrationController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
         ]);
     }

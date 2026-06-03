@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Entity\CentreEtatCivil;
 use App\Entity\Enfant;
 use App\Form\EnfantDetailsType;
 use App\Form\EnfantType;
@@ -12,6 +13,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Form\FormError;
 
 #[Route('/enfant')]
 class EnfantController extends AbstractController
@@ -61,6 +63,7 @@ class EnfantController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
     }
 
@@ -83,17 +86,30 @@ class EnfantController extends AbstractController
         else if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer les infos saisi dans le formulaire
             $data = $form->getData();
-            // dd($data->getCec());
-            $cec = $data->getCec();
-            if(!empty($cec)) {
+            $codeCec = $form->get('code_cec')->getData();
+
+            $cec = $entityManager
+                ->getRepository(CentreEtatCivil::class)
+                ->findOneBy([
+                    'codeCec' => $codeCec
+                ]);
+
+            // on vérifie si le cec saisie existe en BD
+            if (!$cec) {
+                $form->get('code_cec')
+                    ->addError(new FormError("Ce code CEC n'existe pas."));
+            } else {
+                $enfant->setCentreEtatCivil($cec);
                 $enfant->setEnfantReconnuYN(true);
                 $enfant->setAgentSaisie($this->getUser());
-            }
-            $entityManager->flush();
+                $entityManager->persist($enfant);
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_agent_show', [
-                'id' => $enfant->getAgent()->getId(),
-            ], Response::HTTP_SEE_OTHER);
+                return $this->redirectToRoute(
+                    'app_agent_show',['id' => $enfant->getAgent()->getId(),],
+                    Response::HTTP_SEE_OTHER
+                );
+            }
         }
 
         return $this->render('enfant/update.html.twig', [
@@ -106,6 +122,7 @@ class EnfantController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
     }
 

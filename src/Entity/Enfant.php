@@ -81,17 +81,14 @@ class Enfant
     #[ORM\ManyToOne(inversedBy: 'enfants_saisis')]
     private ?Utilisateur $agent_saisie = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $region_cec = null;
-
-    #[ORM\Column(length: 6, nullable: true)]
-    private ?string $codeArrondissement = null;
-
     #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
     private ?\DateTimeImmutable $createdAt = null;
 
     #[ORM\Column]
     private ?bool $handicapeYN = false;
+
+    #[ORM\ManyToOne(inversedBy: 'enfants')]
+    private ?CentreEtatCivil $centreEtatCivil = null;
 
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un enfant pour
@@ -192,18 +189,6 @@ class Enfant
         return $this;
     }
 
-    public function getCec(): ?string
-    {
-        return $this->cec;
-    }
-
-    public function setCec(?string $cec): static
-    {
-        $this->cec = $cec;
-
-        return $this;
-    }
-
     public function getNumeroActe(): ?string
     {
         return $this->numero_acte;
@@ -264,30 +249,6 @@ class Enfant
         return $this;
     }
 
-    public function getRegionCec(): ?int
-    {
-        return $this->region_cec;
-    }
-
-    public function setRegionCec(?int $region_cec): static
-    {
-        $this->region_cec = $region_cec;
-
-        return $this;
-    }
-
-    public function getCodeArrondissement(): ?string
-    {
-        return $this->codeArrondissement;
-    }
-
-    public function setCodeArrondissement(?string $codeArrondissement): static
-    {
-        $this->codeArrondissement = $codeArrondissement;
-
-        return $this;
-    }
-
     public function getCreatedAt(): ?\DateTimeImmutable
     {
         return $this->createdAt;
@@ -308,6 +269,18 @@ class Enfant
     public function setHandicapeYN(bool $handicapeYN): static
     {
         $this->handicapeYN = $handicapeYN;
+
+        return $this;
+    }
+
+    public function getCentreEtatCivil(): ?CentreEtatCivil
+    {
+        return $this->centreEtatCivil;
+    }
+
+    public function setCentreEtatCivil(?CentreEtatCivil $centreEtatCivil): static
+    {
+        $this->centreEtatCivil = $centreEtatCivil;
 
         return $this;
     }

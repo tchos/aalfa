@@ -5,7 +5,11 @@
 {% block contenttitle %}Mettre à jour un enfant{% endblock %}
 
 {% block aside %}
-    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
 {% endblock %}
 
 {% block bouton %}
@@ -28,8 +32,7 @@
             <div class="col">{{ form_row(form.date_naissance) }}</div>
         </div>
         <div class="row">
-            <div class="col">{{ form_row(form.cec) }}</div>
-            <div class="col">{{ form_row(form.codeArrondissement) }}</div>
+            <div class="col">{{ form_row(form.code_cec) }}</div>
             <div class="col">{{ form_row(form.numero_acte) }}</div>
             <div class="col">{{ form_row(form.date_acte_naissance) }}</div>
         </div>

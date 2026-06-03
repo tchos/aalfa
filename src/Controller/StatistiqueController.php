@@ -20,6 +20,7 @@ class StatistiqueController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
         ]);
     }
@@ -35,6 +36,7 @@ class StatistiqueController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
         ]);
     }
@@ -50,6 +52,7 @@ class StatistiqueController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
             'teamStats' => $statistiques->getTeamStats('DESC'),
         ]);
@@ -66,9 +69,9 @@ class StatistiqueController extends AbstractController
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
             'globalUserStats' => $statistiques->getUserStats('DESC'),
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
             'stats' => $statistiques->getStats(),
             'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
         ]);
     }
-
 }

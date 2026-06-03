@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Agent;
+use App\Entity\Enfant;
 use App\Entity\Recenseur;
 use App\Entity\Utilisateur;
 use Doctrine\ORM\EntityManagerInterface;
@@ -63,7 +64,7 @@ class Statistiques
     }
 
     /**
-     * Nombre d'acte de naissances saisis.
+     * Retourne le nombre d'acte de naissances saisis.
      *
      * @return int
      */
@@ -208,5 +209,25 @@ class Statistiques
                     WHERE a.telephone != ''"
         )
             ->getSingleScalarResult();
+    }
+
+    /**
+     * Retourne le nombre d'actes de naissance enregistrés par cec .
+     *
+     * @return Enfant
+     */
+    public function getNbActesByCec($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT e.cec AS cec, COUNT(e.numero_acte) AS nb_enfant
+            FROM App\Entity\Enfant e
+            JOIN a.enfants e
+            JOIN a.recenseur r
+            JOIN r.equipe i
+            WHERE e.numero_acte != ''
+            GROUP BY equipe
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
     }
 }
