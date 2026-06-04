@@ -55,9 +55,6 @@ class Enfant
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_naissance = null;
 
-    #[ORM\Column(length: 128, nullable: true)]
-    private ?string $cec = null;
-
     #[ORM\Column(length: 32, nullable: true)]
     #[Assert\Length(
         min: 4,

@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\CentreEtatCivil;
 use App\Entity\Enfant;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -14,6 +15,19 @@ class EnfantRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Enfant::class);
+    }
+
+    public function findByCecOrderByMatricule(CentreEtatCivil $cec): array
+    {
+        return $this->createQueryBuilder('e')
+            ->join('e.agent', 'a')
+            ->where('e.centreEtatCivil = :cec')
+            ->andWhere('e.enfant_reconnu_y_n = true')
+            ->setParameter('cec', $cec)
+            ->orderBy('a.matricule', 'ASC')
+            ->addOrderBy('e.date_naissance', 'ASC')
+            ->getQuery()
+            ->getResult();
     }
 
     //    /**

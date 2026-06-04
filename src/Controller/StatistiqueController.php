@@ -74,4 +74,22 @@ class StatistiqueController extends AbstractController
             'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
         ]);
     }
+
+    #[Route('/nbactesbycec', name: 'app_statistique_cec')]
+    public function cecStats(Statistiques $statistiques): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('statistique/cec.html.twig', [
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
+            'cecStats' => $statistiques->getNbActesByCec('DESC'),
+            'stats' => $statistiques->getStats(),
+            'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
+        ]);
+    }
 }

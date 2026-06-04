@@ -3,9 +3,11 @@
 namespace App\Service;
 
 use App\Entity\Agent;
+use App\Entity\CentreEtatCivil;
 use App\Entity\Enfant;
 use App\Entity\Recenseur;
 use App\Entity\Utilisateur;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 
 class Statistiques
@@ -214,18 +216,16 @@ class Statistiques
     /**
      * Retourne le nombre d'actes de naissance enregistrés par cec .
      *
-     * @return Enfant
+     * @return ArrayCollection
      */
     public function getNbActesByCec($direction)
     {
         return $this->manager->createQuery(
-            "SELECT e.cec AS cec, COUNT(e.numero_acte) AS nb_enfant
-            FROM App\Entity\Enfant e
-            JOIN a.enfants e
-            JOIN a.recenseur r
-            JOIN r.equipe i
+            "SELECT c.id AS id, c.codeCec AS code, c.libelleCec AS libelle, COUNT(e.numero_acte) AS nb_enfant
+            FROM App\Entity\CentreEtatCivil c
+            JOIN c.enfants e
             WHERE e.numero_acte != ''
-            GROUP BY equipe
+            GROUP BY id, code, libelle
             ORDER BY nb_enfant ".$direction
         )
             ->getResult();

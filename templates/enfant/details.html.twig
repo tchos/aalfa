@@ -50,9 +50,9 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <label class="fw-bold text-muted">Code CEC</label>
+                        <label class="fw-bold text-muted">Centre d'Etat Civil</label>
                         <div class="form-control bg-light">
-                            {{ enfant.centreEtatCivil.codeCec ?: '-' }}
+                            {{ enfant.centreEtatCivil.libelleCec ?: '-' }}
                         </div>
                     </div>
                 </div>
@@ -119,10 +119,6 @@
                                 <span class="badge bg-secondary">Non</span>
                             {% endif %}
                         </div>
-                    </div>
-                    <div class="col-md-4">
-                        <label class="fw-bold text-muted">Code arrondissement</label>
-                        <div class="form-control bg-light">{{ enfant.codeArrondissement ?: '-' }}</div>
                     </div>
                 </div>
                 <!-- AGENTS -->

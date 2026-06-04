@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS PAR EQUIPE{% endblock %}
+{% block title %}STATS PAR CEC{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
 {% endblock %}
 
-{% block contenttitle %}Statistiques globales des saisies par équipe !{% endblock %}
+{% block contenttitle %}Statistiques globales des saisies par CEC !{% endblock %}
 
 {% block aside %}
     {% include '_partials/_aside.html.twig' with {
@@ -62,29 +62,35 @@
     <hr class="mb-3">
     <div class="row">
         <div class="col-sm-9 mx-auto">
-            <table id="teamstats" class="display compact" style="width:100%">
+            <table id="cecstats" class="display compact" style="width:100%">
                 <thead>
                 <tr>
-                    <th class="text-start">Rang</th>
-                    <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre actes collectés</th>
+                    <th class="text-center">Rang</th>
+                    <th class="text-start">Code</th>
+                    <th class="text-start">Libellé</th>
+                    <th class="text-center">Effectifs</th>
+                    <th class="text-center">Liste des enfants</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% set i = 1 %}
-                {% for team in teamStats %}
+                {% for cec in cecStats %}
                     <tr>
-                        <td class="text-start">{{ i }}</td>
+                        <td class="text-center">{{ i }}</td>
                         {% if i == 1 %}
-                            <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                            <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt="">{{ cec.code }}</td>
                         {% elseif i == 2 %}
-                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt="">{{ cec.code }}</td>
                         {% elseif i == 3 %}
-                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
+                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">{{ cec.code }}</td>
                         {% else %}
-                            <td>Equipe {{ team.equipe }}</td>
+                            <td>Equipe {{ cec.code }}</td>
                         {% endif %}
-                        <td class="text-start">{{ team.nb_enfant | number_format(0,'.',' ') }}</td>
+                        <td class="text-start">{{ cec.libelle }}</td>
+                        <td class="text-center">{{ cec.nb_enfant | number_format(0,'.',' ') }}</td>
+                        <td class="text-center">
+                            <a href="{{ path('app_cec_enfants', {'id': cec.id}) }}">Voir</a>
+                        </td>
                     </tr>
                     {% set i = i + 1 %}
                 {% else %}
@@ -93,9 +99,11 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th class="text-start">Rang</th>
-                    <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre actes collectés</th>
+                    <th class="text-center">Rang</th>
+                    <th class="text-start">Code</th>
+                    <th class="text-start">Libellé</th>
+                    <th class="text-center">Effectifs</th>
+                    <th class="text-center">Liste des enfants</th>
                 </tr>
                 </tfoot>
             </table>
@@ -117,7 +125,7 @@
     <script src="{{ asset('asset/js/buttons.print.min.js') }}"></script>
     <script>
         $(document).ready(function(){
-            new DataTable('#teamstats', {
+            new DataTable('#cecstats', {
                 layout: {
                     topStart: {
                         pageLength: true,
