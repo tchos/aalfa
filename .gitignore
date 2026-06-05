@@ -38,4 +38,4 @@ yarn-error.log
 *.scss.map
 >>>>>>> a1c8b9f614d72ae7ad5c97696aaa5303ab62cdbc
 
-*.sql
+/public/asset/sql/*.sql
