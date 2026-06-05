@@ -1,0 +1,43 @@
+<div class="row">
+    <div class="col">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-9"><p class="card-text">Agents recensés: </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ stats.nbAgentRecense | number_format(0,'.',' ') }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-9"><p class="card-text">Enfants validés: </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ stats.nbActeNaissance | number_format(0,'.',' ') }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-9"><p class="card-text">Utilisateurs inscrits: </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ stats.nbUsers | number_format(0,'.',' ') }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col">
+        <div class="card border-primary mb-3" style="max-width: 18rem;">
+            <div class="card-header">
+                <div class="row">
+                    <div class="col-9"><p class="card-text">Equipes inscrites: </p></div>
+                    <div class="col"><span class="badge text-bg-primary">{{ stats.nbEquipes | number_format(0,'.',' ') }}</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<hr class="mb-3">

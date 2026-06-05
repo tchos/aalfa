@@ -10,11 +10,7 @@
 {% endblock %}
 
 {% block aside %}
-    {% include '_partials/_aside.html.twig' with {
-        'cpteurDailyUser': compteurUserJour,
-        'cpteurUser': compteurUser,
-        'totalSaisie': totalSaisie
-    } %}
+    {% include '_partials/_aside.html.twig' with {'cpteurDailyUser':compteurUserJour, 'cpteurUser':compteurUser} %}
 {% endblock %}
 
 {% block body %}
@@ -49,8 +45,9 @@
                     <th scope="col" class="text-center">Date Emb.</th>
                     <th scope="col" class="text-center">Enfts payés</th>
                     <th scope="col" class="text-center">Téléphones</th>
-                    <th scope="col" class="text-center">Agt Collecte</th>
+                    <th scope="col" class="text-center">Recenseur</th>
                     <th scope="col" class="text-center">Enfts Collectés</th>
+                    <th scope="col" class="text-center">Fiche</th>
                     <th scope="col" class="text-center">Action</th>
                 </tr>
             </thead>
@@ -64,6 +61,16 @@
                     <td class="text-center">{{ agent.telephone }}</td>
                     <td class="text-center">{{ agent.recenseur ? agent.recenseur.code : '-' }}</td>
                     <td class="text-center">{{ agent.NbEnftCollecte }}</td>
+                    <td class="text-center">
+                        {% if ficheCollecte %}
+                            <a href="{{ asset('asset/fiches_collecte/' ~ ficheCollecte) }}"
+                               title="Fiche de collecte de {{ agent.nomAgt }}" target="_blank">
+                                <img src="{{ asset("asset/images/pdf_file_icon.png") }}" alt="{{ agent.matricule }}" width="20px">
+                            </a>
+                        {% else %}
+                            <img src="{{ asset("asset/images/pdf_black.png") }}" title="La fichier de collecte est indisponible" width="22px">
+                        {% endif %}
+                    </td>
                     <td class="text-center">
                         {% if agent.saisieTerminee == false %}
                             {# <a href="{{ path('app_agent_edit', {'id': agent.id}) }}">edit</a> #}
@@ -185,6 +192,73 @@
                 </tbody>
             </table>
             <div class="mt-4">
+                <button
+                        type="button"
+                        class="btn btn-danger"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalTerminerSaisie">
+
+                    <i class="fa fa-lock"></i>
+                    Terminer la saisie
+
+                </button>
+                <div class="modal fade"
+                     id="modalTerminerSaisie"
+                     tabindex="-1">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header bg-warning">
+                                <h5 class="modal-title">
+                                    Attention
+                                </h5>
+                                <button type="button"
+                                        class="btn-close"
+                                        data-bs-dismiss="modal">
+                                </button>
+                            </div>
+
+                            <div class="modal-body">
+                                {% set totalCollecte = agent.nbEnftCollecte %}
+                                {% set totalRenseigne = agent.nbEnfantsRenseignes %}
+                                {% if totalRenseigne < totalCollecte %}
+                                    <div class="alert alert-danger">
+                                        <strong>
+                                            Attention !
+                                        </strong>
+
+                                        Seulement
+                                        {{ totalRenseigne }}
+                                        enfant(s) renseigné(s)
+                                        sur
+                                        {{ totalCollecte }}.
+                                        <hr>
+                                        Si vous continuez,
+                                        la saisie sera définitivement verrouillée.
+                                    </div>
+                                {% else %}
+                                    <div class="alert alert-success">
+                                        Tous les enfants ont été renseignés.
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button"
+                                        class="btn btn-secondary"
+                                        data-bs-dismiss="modal">
+                                    Continuer les saisies
+                                </button>
+                                <a href="{{ path(
+                                    'app_agent_terminer_saisie',
+                                    {'id': agent.id}
+                                ) }}"
+                                   class="btn btn-danger">
+                                    Oui, terminer
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {#
                 {% if agent.saisieTerminee == false %}
                     <a href="{{ path('app_agent_terminer_saisie', {'id': agent.id}) }}"
                        class="btn btn-danger">
@@ -196,6 +270,7 @@
                         Nouvelle fiche de collecte
                     </a>
                 {% endif %}
+                #}
             </div>
         {% else %}
             <div class="row mx-1">
@@ -231,7 +306,9 @@
 
             if (totalRenseigne < totalCollecte) {
                 e.preventDefault();
+
                 e.returnValue = 'Tous les enfants collectés ne sont pas encore renseignés.';
+
             }
         });
     </script>

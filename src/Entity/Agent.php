@@ -80,6 +80,9 @@ class Agent
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date_validation = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $ficheCollecte = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un agent pour
      * prendre automatiquement la date de saisie des infos sur l'agent .
@@ -181,7 +184,6 @@ class Agent
             $this->enfants->add($enfant);
             $enfant->setAgent($this);
         }
-
         return $this;
     }
 
@@ -282,6 +284,18 @@ class Agent
     public function setDateValidation(?\DateTimeInterface $date_validation): static
     {
         $this->date_validation = $date_validation;
+
+        return $this;
+    }
+
+    public function getFicheCollecte(): ?string
+    {
+        return $this->ficheCollecte;
+    }
+
+    public function setFicheCollecte(?string $ficheCollecte): static
+    {
+        $this->ficheCollecte = $ficheCollecte;
 
         return $this;
     }

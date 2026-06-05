@@ -33,7 +33,6 @@ class EnfantType extends AbstractType
                 'mapped' => false,
                 'attr' => [
                     'placeholder' => 'Ex: ES1001',
-                    'autocomplete' => 'off'
                 ]
             ])
             ->add('numero_acte', TextType::class, [

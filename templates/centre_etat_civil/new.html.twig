@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Equipe{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/auto_tabx/jquery-ui-1.10.0.custom.css') }}" />
+    <link rel="stylesheet" href="{{ asset('asset/auto_tabx/ajax.css') }}" />
+{% endblock %}
+
+{% block contenttitle %}Enregistrement d'un nouveau centre d'état civil{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
+{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-4 form-control-sm">{{ form_row(form.codeCec) }}</div>
+        <div class="col-md-4 form-control-sm">{{ form_row(form.libelleCec) }}</div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 form-control-sm">{{ form_row(form.arrondissement) }}</div>
+        <div class="col-md-4 form-control-sm">{{ form_row(form.departement) }}</div>
+        <div class="col-md-4 form-control-sm">{{ form_row(form.region) }}</div>
+    </div>
+
+    <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
+    <a class="btn btn-sm btn-dark" href="{{ path('app_equipe_list') }}"><i class="fa-solid fa-ban"></i> Annuler</a>
+    {{ form_end(form) }}
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('asset/auto_tabx/jquery-1.9.0.js') }}"></script>
+    <script src="{{ asset('asset/auto_tabx/jquery-ui-1.10.0.custom.js') }}"></script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#centre_etat_civil_arrondissement").autocomplete({
+                minLength: 4,
+                delay: 1,
+                source: '{{ asset('asset/auto_tabx/auto_arrondissement.php') }}'
+            });
+            $('#enfant_code_cec').change(function() {
+                this.value=this.value.toUpperCase();
+                return;
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function(){
+            $("#centre_etat_civil_departement").autocomplete({
+                minLength: 4,
+                delay: 1,
+                source: '{{ asset('asset/auto_tabx/auto_departement.php') }}'
+            });
+            $('#enfant_code_cec').change(function() {
+                this.value=this.value.toUpperCase();
+                return;
+            });
+        });
+    </script>
+{% endblock %}

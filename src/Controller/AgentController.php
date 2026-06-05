@@ -7,6 +7,7 @@ use App\Entity\Historique;
 use App\Form\AgentType;
 use App\Form\SearchAgentType;
 use App\Repository\AgentRepository;
+use App\Service\FicheCollecteService;
 use App\Service\Statistiques;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -20,7 +21,8 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 class AgentController extends AbstractController
 {
     #[Route('/', name: 'app_agent_index')]
-    public function index(AgentRepository $agentRepository, Request $request, Statistiques $statistiques): Response
+    public function index(AgentRepository $agentRepository, Request $request,
+                            Statistiques $statistiques, FicheCollecteService $ficheCollecteService): Response
     {
         $agt = null;
         $user = $this->getUser();
@@ -35,6 +37,10 @@ class AgentController extends AbstractController
             $mat = explode('-', $pers)[0];
 
             $agt = $agentRepository->findWithEnfants($mat);
+            // la fiche de collecte de l'agent
+            $scan = $ficheCollecteService->findScanByMatricule($mat);
+            //dd($scan);
+
             if (!$agt) {
                 $this->addFlash('danger',
                     '<strong>Erreur !!!</strong> Il n\'existe aucun agent public avec le matricule <strong>'.$mat.'</strong> 
@@ -47,6 +53,7 @@ class AgentController extends AbstractController
         return $this->render('agent/index.html.twig', [
             'form' => $form->createView(),
             'agent' => $agt,
+            'ficheCollecte' => $scan,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
@@ -89,11 +96,15 @@ class AgentController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_agent_show', methods: ['GET'])]
-    public function show(Agent $agent, AgentRepository $agentRepository, Request $request, Statistiques $statistiques): Response
+    public function show(Agent $agent, AgentRepository $agentRepository, Request $request,
+                         Statistiques $statistiques, FicheCollecteService $ficheCollecteService): Response
     {
         // utilisateur connecté
         $user = $this->getUser();
+        // les enfants de l'agent
         $agt = $agentRepository->findWithEnfantsId($agent);
+        // la fiche de collecte de l'agent
+        $scan = $ficheCollecteService->findScanByMatricule($agt->getMatricule());
 
         // pour l'historisation de l'action
         $history = new Historique();
@@ -120,6 +131,7 @@ class AgentController extends AbstractController
         return $this->render('agent/index.html.twig', [
             'agent' => $agt,
             'form' => $form,
+            'ficheCollecte' => $scan,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
@@ -168,6 +180,19 @@ class AgentController extends AbstractController
     #[Route('/agent/{id}/terminer-saisie', name: 'app_agent_terminer_saisie')]
     public function terminerSaisie(Agent $agent, EntityManagerInterface $em): Response
     {
+        // verrouillage définitif
+        $agent->setSaisieTerminee(true);
+        $agent->setDateValidation(new \DateTime('now'));
+        $em->flush();
+        $this->addFlash('success', 'La saisie a été terminée avec succès.');
+
+        return $this->redirectToRoute('app_agent_show', ['id' => $agent->getId()]);
+    }
+
+    /*
+    #[Route('/agent/{id}/terminer-saisie', name: 'app_agent_terminer_saisie')]
+    public function terminerSaisies(Agent $agent, EntityManagerInterface $em): Response
+    {
         // On verifie si le nbre d'enft collectés a effectivement été saisi
         if ($agent->getNbEnftCollecte() > $agent->getNbEnfantsRenseignes())
         {
@@ -187,5 +212,5 @@ class AgentController extends AbstractController
 
         $this->addFlash('success', 'Saisie validée avec succès.');
         return $this->redirectToRoute('app_agent_index');
-    }
+    } */
 }

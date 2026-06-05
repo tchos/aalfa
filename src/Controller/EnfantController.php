@@ -78,7 +78,6 @@ class EnfantController extends AbstractController
         $user = $this->getUser();
 
         if ($enfant->getAgent()->isSaisieTerminee()) {
-
             throw $this->createAccessDeniedException(
                 'La saisie de cet agent est déjà terminée.'
             );

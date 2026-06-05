@@ -6,8 +6,14 @@ use App\Repository\CentreEtatCivilRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CentreEtatCivilRepository::class)]
+#[UniqueEntity(
+    fields: 'codeCec',
+    message: 'Il existe dejà un autre centre état civi avec ce code !!!'
+)]
 class CentreEtatCivil
 {
     #[ORM\Id]
@@ -16,6 +22,18 @@ class CentreEtatCivil
     private ?int $id = null;
 
     #[ORM\Column(length: 6)]
+    #[Assert\Length(
+        min: 6,
+        max: 6,
+        minMessage: 'Le minimum est de {{ limit }} caractères !',
+        maxMessage: 'Le max est de {{ limit }} caractères !'
+    )]
+    #[Assert\Regex(
+        pattern: '/(^AD[0-9]{4}$)|(^CE[0-9]{4}$)|(^ES[0-9]{4}$)|(^EN[0-9]{4}$)|(^LT[0-9]{4}$)
+            |(^NO[0-9]{4}$)|(^NW[0-9]{4}$)|(^OU[0-9]{4}$)|(^SU[0-9]{4}$)|(^SW[0-9]{4}$)/',
+        match: true,
+        message: "Le code {{ value }} n'est pas valide poour un centre d'etat civil."
+    )]
     private ?string $codeCec = null;
 
     #[ORM\Column(length: 64)]
