@@ -25,6 +25,7 @@ class AgentController extends AbstractController
                             Statistiques $statistiques, FicheCollecteService $ficheCollecteService): Response
     {
         $agt = null;
+        $scan = null;
         $user = $this->getUser();
         $form = $this->createForm(SearchAgentType::class);
 

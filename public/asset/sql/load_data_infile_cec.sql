@@ -34,3 +34,29 @@ IGNORE 1 ROWS
 -- =========================================
 
 SELECT COUNT(*) AS NOMBRE_CEC FROM centre_etat_civil;
+
+-- =========================================
+-- Annulation des saisies effectuées
+-- =========================================
+
+UPDATE agent
+SET
+    date_collecte = NULL,
+    create_at = NULL,
+    telephone = NULL,
+    recenseur_id = NULL,
+    nb_enft_collecte = NULL,
+    saisie_terminee = 0,
+    date_validation = NULL;
+
+UPDATE enfant
+SET
+    agent_saisie_id = NULL,
+    numero_acte = NULL,
+    date_acte_naissance = NULL,
+    nom_conjoint = NULL,
+    enfant_reconnu_y_n = 0,
+    created_at = NULL,
+    handicape_yn = 0,
+    centre_etat_civil_id = NULL
+WHERE enfant_reconnu_y_n = 1;

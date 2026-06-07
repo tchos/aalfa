@@ -1,20 +1,121 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CentreEtatCivilController!{% endblock %}
+{% block title %}Liste CEC{% endblock %}
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
+{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
+{% endblock %}
+
+{% block contenttitle %}Liste des centres d'état civil{% endblock %}
+
+{% block bouton %}
+    <a class="btn btn-primary btn-sm" href="{{ path('app_cec_new') }}" role="button">Nouveau centre</a>
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <table id="listerececs" class="display compact" style="width:100%">
+        <thead>
+        <tr>
+            <th class="text-start">N°</th>
+            <th class="text-center">Code</th>
+            <th class="text-start">Libellé</th>
+            <th class="text-center">Arrondissement</th>
+            <th class="text-center">Département</th>
+            <th class="text-center">Rérgion</th>
+            <th class="text-center">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set i = 1 %}
+        {% for cec in cecs %}
+            <tr>
+                <td class="text-start">{{ i }}</td>
+                <td class="text-center">{{ cec.codeCec }}</td>
+                <td class="text-start">{{ cec.libelleCec }}</td>
+                <td class="text-center">{{ cec.arrondissement }}</td>
+                <td class="text-center">{{ cec.departement }}</td>
+                <td class="text-center">{{ cec.region }}</td>
+                <td class="text-center">
+                    <a href="#" class="text-primary me-2">
+                        <i class="fa-regular fa-pen-to-square"></i></a>
+                    <a href="#" class="text-danger">
+                        <i class="fa-regular fa-rectangle-xmark"></i></a>
+                </td>
+            </tr>
+            {% set i = i + 1 %}
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        <tr>
+            <th class="text-start">N°</th>
+            <th class="text-center">Code</th>
+            <th class="text-start">Libellé</th>
+            <th class="text-center">Arrondissement</th>
+            <th class="text-center">Département</th>
+            <th class="text-center">Rérgion</th>
+            <th class="text-center">Action</th>
+        </tr>
+        </tfoot>
+    </table>
+{% endblock %}
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+{% block javascripts %}
+    <script src="{{ asset('asset/js/dataTables.bootstrap5.js') }}"></script>
+    <script src="{{ asset('asset/js/jquery-3.7.1.js') }}"></script>
+    <script src="{{ asset('asset/js/dataTables.js') }}"></script>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/home/tchos/Documents/projets/symfony/aalfa/src/Controller/CentreEtatCivilController.php</code></li>
-        <li>Your template at <code>/home/tchos/Documents/projets/symfony/aalfa/templates/centre_etat_civil/index.html.twig</code></li>
-    </ul>
-</div>
+    <script src="{{ asset('asset/js/dataTables.buttons.js') }}"></script>
+    <script src="{{ asset('asset/js/buttons.dataTables.js') }}"></script>
+    <script src="{{ asset('asset/js/jszip.min.js') }}"></script>
+    <script src="{{ asset('asset/js/pdfmake.min.js') }}"></script>
+    <script src="{{ asset('asset/js/vfs_fonts.js') }}"></script>
+    <script src="{{ asset('asset/js/buttons.html5.min.js') }}"></script>
+    <script src="{{ asset('asset/js/buttons.print.min.js') }}"></script>
+    <script>
+        $(document).ready(function(){
+            new DataTable('#listerececs', {
+                layout: {
+                    topStart: {
+                        pageLength: true,
+                        buttons: [
+                            {
+                                extend: 'copy',
+                                text: '<i class="fa fa-copy"></i> Copier',
+                                className: 'btn btn-secondary btn-sm'
+                            },
+                            {
+                                extend: 'csv',
+                                text: '<i class="fa fa-file-csv"></i> CSV',
+                                className: 'btn btn-info btn-sm'
+                            },
+                            {
+                                extend: 'excel',
+                                text: '<i class="fa fa-file-excel"></i> Excel',
+                                className: 'btn btn-success btn-sm'
+                            },
+                            {
+                                extend: 'pdf',
+                                text: '<i class="fa fa-file-pdf"></i> PDF',
+                                className: 'btn btn-danger btn-sm',
+                                orientation: 'landscape',
+                                pageSize: 'A4'
+                            },
+                            {
+                                extend: 'print',
+                                text: '<i class="fa fa-print"></i> Imprimer',
+                                className: 'btn btn-dark btn-sm'
+                            }
+                        ]
+                    }
+                }
+            });
+        });
+    </script>
 {% endblock %}
