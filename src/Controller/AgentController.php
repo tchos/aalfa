@@ -74,16 +74,17 @@ class AgentController extends AbstractController
         //User connecté
         $user = $this->getUser();
         //Pour historiser l'action du user
-        $history = new Historique();
+        $historique = new Historique();
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $history->setTypeAction('UPDATE')
+            $historique->setTypeAction('UPDATE')
                 ->setAuteur($user->getFullname())
                 ->setNature('AGENT')
                 ->setClef($form->get('matricule')->getData())
                 ->setDateAction(new \DateTimeImmutable('now'));
             ;
 
+            $entityManager->persist($historique);
             $entityManager->persist($agent);
             $entityManager->flush();
 
@@ -108,7 +109,7 @@ class AgentController extends AbstractController
         $scan = $ficheCollecteService->findScanByMatricule($agt->getMatricule());
 
         // pour l'historisation de l'action
-        $history = new Historique();
+        $historique = new Historique();
 
         $form = $this->createForm(SearchAgentType::class);
 

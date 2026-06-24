@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\CentreEtatCivil;
 use App\Entity\Enfant;
+use App\Entity\Historique;
 use App\Form\EnfantDetailsType;
 use App\Form\EnfantType;
 use App\Repository\EnfantRepository;
@@ -71,6 +72,7 @@ class EnfantController extends AbstractController
     public function edit(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
         Statistiques $statistiques): Response
     {
+        $historique = new Historique();
         $form = $this->createForm(EnfantType::class, $enfant);
         $form->handleRequest($request);
 
@@ -85,7 +87,8 @@ class EnfantController extends AbstractController
         else if ($form->isSubmitted() && $form->isValid()) {
             // Récupérer les infos saisi dans le formulaire
             $data = $form->getData();
-            $codeCec = $form->get('code_cec')->getData();
+            $leCec = $form->get('code_cec')->getData();
+            $codeCec = explode('-', $leCec)[0];
 
             $cec = $entityManager
                 ->getRepository(CentreEtatCivil::class)
@@ -101,6 +104,15 @@ class EnfantController extends AbstractController
                 $enfant->setCentreEtatCivil($cec);
                 $enfant->setEnfantReconnuYN(true);
                 $enfant->setAgentSaisie($this->getUser());
+
+                $historique->setTypeAction('UPDATE')
+                    ->setAuteur($user->getFullname())
+                    ->setNature('ENFANT')
+                    ->setClef($enfant->getMatricule() .'-'.$form->get('nom_enfant')->getData())
+                    ->setDateAction(new \DateTimeImmutable('now'));
+                ;
+
+                $entityManager->persist($historique);
                 $entityManager->persist($enfant);
                 $entityManager->flush();
 
@@ -132,7 +144,6 @@ class EnfantController extends AbstractController
             $entityManager->remove($enfant);
             $entityManager->flush();
         }
-
         return $this->redirectToRoute('app_enfant_index', [], Response::HTTP_SEE_OTHER);
     }
 }

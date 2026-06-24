@@ -45,12 +45,6 @@ class EnfantType extends AbstractType
                 'label' => 'Date de délivrance de l\'acte de naissance',
                 'widget' => 'single_text',
             ])
-            ->add('nom_conjoint', TextType::class, [
-                'label' => 'Nom du conjoint',
-                'attr' => [
-                    'placeholder' => 'Ex: DIOS BENEDICTO PACIFICO',
-                ]
-            ])
             ->add('handicapeYN', CheckboxType::class, [
                 'label' => "Handicapé (Y/N) ?",
                 'required' => false,

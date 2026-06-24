@@ -46,9 +46,6 @@ class Enfant
     #[ORM\Column]
     private ?int $rang = null;
 
-    #[ORM\Column]
-    private ?int $ordre = null;
-
     #[ORM\Column(length: 64)]
     private ?string $nom_enfant = null;
 
@@ -146,18 +143,6 @@ class Enfant
     public function setRang(int $rang): static
     {
         $this->rang = $rang;
-
-        return $this;
-    }
-
-    public function getOrdre(): ?int
-    {
-        return $this->ordre;
-    }
-
-    public function setOrdre(int $ordre): static
-    {
-        $this->ordre = $ordre;
 
         return $this;
     }

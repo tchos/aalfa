@@ -47,7 +47,7 @@
                         <td class="text-start">{{ cec.libelle }}</td>
                         <td class="text-center">{{ cec.nb_enfant | number_format(0,'.',' ') }}</td>
                         <td class="text-center">
-                            <a href="{{ path('app_cec_enfants', {'id': cec.id}) }}"></a>
+                            <a href="{{ path('app_cec_enfants', {'id': cec.id}) }}" class="text-decoration-none">Voir</a>
                         </td>
                     </tr>
                     {% set i = i + 1 %}

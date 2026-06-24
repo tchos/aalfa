@@ -4,11 +4,11 @@
 
     ///*************** list of code_cec from database *****************.
     $code_cec=trim($_GET['term']);
-    $req1x="SELECT `code_cec` FROM centre_etat_civil WHERE code_cec like '".$code_cec."%' order by code_cec ASC ";
+    $req1x="SELECT CONCAT(`code_cec`,'-',`libelle_cec`) AS cec FROM centre_etat_civil WHERE code_cec like '".$code_cec."%' order by code_cec ASC ";
     $result1x=$mysqli->query($req1x);
     while ($row1x = $result1x->fetch_assoc()) {
         // code...
-        $data1x[] = $row1x['code_cec'];
+        $data1x[] = $row1x['cec'];
     }
     echo json_encode($data1x) ;
 ?>
