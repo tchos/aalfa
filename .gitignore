@@ -43,3 +43,8 @@ yarn-error.log
 /public/asset/sql/
 /var/
 /vendor/
+/.env.local
+
+*.sql
+*.csv
+*.log
