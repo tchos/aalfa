@@ -8,6 +8,7 @@ use App\Form\AgentType;
 use App\Form\SearchAgentType;
 use App\Repository\AgentRepository;
 use App\Service\FicheCollecteService;
+use App\Service\GestionSaisieAgentService;
 use App\Service\Statistiques;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,8 +27,9 @@ class AgentController extends AbstractController
     {
         $agt = null;
         $scan = null;
+        // Capter le user connecté
         $user = $this->getUser();
-        $form = $this->createForm(SearchAgentType::class);
+        $form = $this->createForm(SearchAgentType::class,['matricule' => '']);
 
         $form->handleRequest($request);
 
@@ -111,7 +113,7 @@ class AgentController extends AbstractController
         // pour l'historisation de l'action
         $historique = new Historique();
 
-        $form = $this->createForm(SearchAgentType::class);
+        $form = $this->createForm(SearchAgentType::class,['matricule' => '']);
 
         $form->handleRequest($request);
 
@@ -132,7 +134,7 @@ class AgentController extends AbstractController
 
         return $this->render('agent/index.html.twig', [
             'agent' => $agt,
-            'form' => $form,
+            'form' => $form->createView(),
             'ficheCollecte' => $scan,
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
@@ -144,13 +146,15 @@ class AgentController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_agent_edit', methods: ['POST','GET'])]
-    public function edit(Request $request, Agent $agent, EntityManagerInterface $entityManager, Statistiques $statistiques): Response
+    public function edit(Request $request, Agent $agent, EntityManagerInterface $entityManager, Statistiques $statistiques,
+        GestionSaisieAgentService $gestionSaisie): Response
     {
         $user = $this->getUser();
         $form = $this->createForm(AgentType::class, $agent);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $gestionSaisie->mettreAJourEtatSaisie($agent);
             $entityManager->flush();
             return $this->redirectToRoute('app_agent_show', [
                 'id' => $agent->getId()

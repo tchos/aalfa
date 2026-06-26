@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260603184322 extends AbstractMigration
+final class Version20260625193202 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,12 +20,16 @@ final class Version20260603184322 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
-        $this->addSql('CREATE TABLE arrondissement (id INT AUTO_INCREMENT NOT NULL, code_arr VARCHAR(6) NOT NULL, libelle_arr VARCHAR(64) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('DROP INDEX UNIQ_BFE7CB8512B2DC9C ON recenseur');
+        $this->addSql('ALTER TABLE recenseur CHANGE matricule matricule VARCHAR(8) NOT NULL');
+        $this->addSql('ALTER TABLE utilisateur DROP enable_yn');
     }
 
     public function down(Schema $schema): void
     {
         // this down() migration is auto-generated, please modify it to your needs
-        $this->addSql('DROP TABLE arrondissement');
+        $this->addSql('ALTER TABLE recenseur CHANGE matricule matricule VARCHAR(8) DEFAULT NULL');
+        $this->addSql('CREATE UNIQUE INDEX UNIQ_BFE7CB8512B2DC9C ON recenseur (matricule)');
+        $this->addSql('ALTER TABLE utilisateur ADD enable_yn TINYINT(1) NOT NULL');
     }
 }

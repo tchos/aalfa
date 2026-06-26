@@ -8,6 +8,7 @@ use App\Entity\Historique;
 use App\Form\EnfantDetailsType;
 use App\Form\EnfantType;
 use App\Repository\EnfantRepository;
+use App\Service\GestionSaisieAgentService;
 use App\Service\Statistiques;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -70,8 +71,9 @@ class EnfantController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_enfant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
-        Statistiques $statistiques): Response
+        Statistiques $statistiques, GestionSaisieAgentService $gestionSaisie): Response
     {
+        $agent = $enfant->getAgent();
         $historique = new Historique();
         $form = $this->createForm(EnfantType::class, $enfant);
         $form->handleRequest($request);
@@ -79,9 +81,15 @@ class EnfantController extends AbstractController
         //user connecté
         $user = $this->getUser();
 
-        if ($enfant->getAgent()->isSaisieTerminee()) {
+        if ($agent->isSaisieTerminee()) {
             throw $this->createAccessDeniedException(
                 'La saisie de cet agent est déjà terminée.'
+            );
+
+            $this->addFlash(
+                'success',
+                'Les '.$agent->getNbEnftCollecte().
+                ' enfants ont été renseignés. La saisie a été automatiquement clôturée.'
             );
         }
         else if ($form->isSubmitted() && $form->isValid()) {
@@ -104,6 +112,8 @@ class EnfantController extends AbstractController
                 $enfant->setCentreEtatCivil($cec);
                 $enfant->setEnfantReconnuYN(true);
                 $enfant->setAgentSaisie($this->getUser());
+                // Pour verrouiller automatiquement la saisie dès qu'on a saisi le nobre d'enfants collectés.
+                $gestionSaisie->mettreAJourEtatSaisie($agent);
 
                 $historique->setTypeAction('UPDATE')
                     ->setAuteur($user->getFullname())
@@ -112,6 +122,7 @@ class EnfantController extends AbstractController
                     ->setDateAction(new \DateTimeImmutable('now'));
                 ;
 
+                // Persistence des données dans la BD.
                 $entityManager->persist($historique);
                 $entityManager->persist($enfant);
                 $entityManager->flush();
@@ -138,10 +149,12 @@ class EnfantController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_enfant_delete', methods: ['POST'])]
-    public function delete(Request $request, Enfant $enfant, EntityManagerInterface $entityManager): Response
+    public function delete(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
+        GestionSaisieAgentService $gestionSaisie): Response
     {
         if ($this->isCsrfTokenValid('delete'.$enfant->getId(), $request->getPayload()->getString('_token'))) {
             $entityManager->remove($enfant);
+            $gestionSaisie->mettreAJourEtatSaisie($agent);
             $entityManager->flush();
         }
         return $this->redirectToRoute('app_enfant_index', [], Response::HTTP_SEE_OTHER);

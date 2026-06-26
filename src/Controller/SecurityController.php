@@ -16,15 +16,6 @@ class SecurityController extends AbstractController
     public function login(AuthenticationUtils $authenticationUtils, EntityManagerInterface $manager,
         Request $request): Response
     {
-        // Si l'utilisateur vient d'une session expirée
-        if (!$this->getUser() && $request->hasPreviousSession()) {
-
-            $this->addFlash(
-                'warning',
-                'Votre session a expiré après 2 minutes d’inactivité.'
-            );
-        }
-
         if ($this->getUser()) {
             $user = $this->getUser()->setDateDerniereConnexion(new \DateTime());
             // On enregistre la dernière date de connexion de chaque utilisateur dans la bd

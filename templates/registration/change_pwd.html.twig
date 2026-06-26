@@ -1,0 +1,38 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier Password{% endblock %}
+
+{% block contenttitle %}Modifier votre mot de passe{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
+{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes %}
+        <div class="alert alert-{{ label }}">
+            {% for message in messages %}
+                {{ message|raw }}
+            {% endfor %}
+        </div>
+    {% endfor %}
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-4 form-control-sm">{{ form_row(form.fullname) }}</div>
+            <div class="col-md-4 form-control-sm">{{ form_row(form.email) }}</div>
+            <div class="col-md-4 form-control-sm">{{ form_row(form.telephone) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-control-sm">{{ form_row(form.old_password) }}</div>
+            <div class="col-md-4 form-control-sm">{{ form_row(form.password.first) }}</div>
+            <div class="col-md-4 form-control-sm">{{ form_row(form.password.second) }}</div>
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
+        <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-ban"></i> Annuler</button>
+    {{ form_end(form) }}
+{% endblock %}

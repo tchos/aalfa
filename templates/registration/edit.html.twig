@@ -1,0 +1,31 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}PROFILE{% endblock %}
+
+{% block contenttitle %}Modifier vos informations personnelles{% endblock %}
+
+{% block aside %}
+    {% include '_partials/_aside.html.twig' with {
+        'cpteurDailyUser': compteurUserJour,
+        'cpteurUser': compteurUser,
+        'totalSaisie': totalSaisie
+    } %}
+{% endblock %}
+
+{% block body %}
+
+    {{ form_start(form) }}
+        <div class="row">
+            <div class="col-md-4 form-control-sm">{{ form_row(form.email) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-control-sm">{{ form_row(form.fullname) }}</div>
+        </div>
+        <div class="row">
+            <div class="col-md-4 form-control-sm">{{ form_row(form.telephone) }}</div>
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-primary"><i class="fa-regular fa-floppy-disk"></i> Enregistrer</button>
+        <button type="submit" class="btn btn-sm btn-dark"><i class="fa-solid fa-ban"></i> Annuler</button>
+    {{ form_end(form) }}
+{% endblock %}

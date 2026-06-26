@@ -23,6 +23,7 @@ class EnfantType extends AbstractType
         $builder
             ->add('nom_enfant', TextType::class,[
                 'label' => 'Nom de l\'enfant',
+                'disabled' => true,
             ])
             ->add('date_naissance', DateType::class, [
                 'label' => 'Date de naissance',
@@ -48,11 +49,6 @@ class EnfantType extends AbstractType
             ->add('handicapeYN', CheckboxType::class, [
                 'label' => "Handicapé (Y/N) ?",
                 'required' => false,
-            ])
-            ->add('Enregistrer', SubmitType::class, [
-                'label' => "<i class='fa-regular fa-bookmark'></i> Enregistrer",
-                'label_html' => true,
-                'attr' =>['class'=>'btn btn-sm btn-success'],
             ])
         ;
     }

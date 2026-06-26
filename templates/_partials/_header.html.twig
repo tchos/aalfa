@@ -86,8 +86,8 @@
                     <span class="fw-bolder"><i class="fa-regular fa-address-book"></i> {{ app.user.fullname }}</span>
                 </a>
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="#">Modifier profile</a></li>
-                    <li><a class="dropdown-item" href="#">Changer password</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_user_edit',{'id':app.user.id}) }}">Modifier profile</a></li>
+                    <li><a class="dropdown-item" href="{{ path('app_user_password', {'id': app.user.id}) }}">Changer password</a></li>
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item" href="{{ path('app_logout') }}">Se déconnecter</a></li>
                 </ul>

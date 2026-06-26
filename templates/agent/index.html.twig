@@ -122,7 +122,7 @@
                         <th scope="col">Noms</th>
                         <th scope="col-1">Naissance</th>
                         <th scope="col-1">N° Acte Nais.</th>
-                        <th scope="col">Nom conjoint</th>
+                        <th scope="col">Date Acte Nais.</th>
                         <th scope="col" class="text-center">Reconnu (O/N) ?</th>
                         <th scope="col" class="text-center">Handicapé (O/N) ?</th>
                         <th scope="col-1" class="text-center">Action</th>
@@ -134,7 +134,11 @@
                             <td>{{ enfant.nomEnfant }}</td>
                             <td>{{ enfant.dateNaissance|date('d-m-Y') }}</td>
                             <td>{{ enfant.numeroActe }}</td>
-                            <td>{{ enfant.nomConjoint }}</td>
+                            <td>
+                                {% if enfant.dateActeNaissance  %}
+                                    {{ enfant.dateActeNaissance|date('d-m-Y') }}
+                                {% endif %}
+                            </td>
                             <td class="text-center">{% if enfant.isEnfantReconnuYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">{% if enfant.isHandicapeYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">
@@ -192,72 +196,74 @@
                 </tbody>
             </table>
             <div class="mt-4">
-                <button
-                        type="button"
-                        class="btn btn-danger"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalTerminerSaisie">
+                {% if agent.saisieTerminee == false %}
+                    <button
+                            type="button"
+                            class="btn btn-danger"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalTerminerSaisie">
 
-                    <i class="fa fa-lock"></i>
-                    Terminer la saisie
+                        <i class="fa fa-lock"></i>
+                        Terminer la saisie
 
-                </button>
-                <div class="modal fade"
-                     id="modalTerminerSaisie"
-                     tabindex="-1">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header bg-warning">
-                                <h5 class="modal-title">
-                                    Attention
-                                </h5>
-                                <button type="button"
-                                        class="btn-close"
-                                        data-bs-dismiss="modal">
-                                </button>
-                            </div>
+                    </button>
+                    <div class="modal fade"
+                         id="modalTerminerSaisie"
+                         tabindex="-1">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header bg-warning">
+                                    <h5 class="modal-title">
+                                        Attention
+                                    </h5>
+                                    <button type="button"
+                                            class="btn-close"
+                                            data-bs-dismiss="modal">
+                                    </button>
+                                </div>
 
-                            <div class="modal-body">
-                                {% set totalCollecte = agent.nbEnftCollecte %}
-                                {% set totalRenseigne = agent.nbEnfantsRenseignes %}
-                                {% if totalRenseigne < totalCollecte %}
-                                    <div class="alert alert-danger">
-                                        <strong>
-                                            Attention !
-                                        </strong>
+                                <div class="modal-body">
+                                    {% set totalCollecte = agent.nbEnftCollecte %}
+                                    {% set totalRenseigne = agent.nbEnfantsRenseignes %}
+                                    {% if totalRenseigne < totalCollecte %}
+                                        <div class="alert alert-danger">
+                                            <strong>
+                                                Attention !
+                                            </strong>
 
-                                        Seulement
-                                        {{ totalRenseigne }}
-                                        enfant(s) renseigné(s)
-                                        sur
-                                        {{ totalCollecte }}.
-                                        <hr>
-                                        Si vous continuez,
-                                        la saisie sera définitivement verrouillée.
-                                    </div>
-                                {% else %}
-                                    <div class="alert alert-success">
-                                        Tous les enfants ont été renseignés.
-                                    </div>
-                                {% endif %}
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button"
-                                        class="btn btn-secondary"
-                                        data-bs-dismiss="modal">
-                                    Continuer les saisies
-                                </button>
-                                <a href="{{ path(
-                                    'app_agent_terminer_saisie',
-                                    {'id': agent.id}
-                                ) }}"
-                                   class="btn btn-danger">
-                                    Oui, terminer
-                                </a>
+                                            Seulement
+                                            {{ totalRenseigne }}
+                                            enfant(s) renseigné(s)
+                                            sur
+                                            {{ totalCollecte }}.
+                                            <hr>
+                                            Si vous continuez,
+                                            la saisie sera définitivement verrouillée.
+                                        </div>
+                                    {% else %}
+                                        <div class="alert alert-success">
+                                            Tous les enfants ont été renseignés.
+                                        </div>
+                                    {% endif %}
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button"
+                                            class="btn btn-secondary"
+                                            data-bs-dismiss="modal">
+                                        Continuer les saisies
+                                    </button>
+                                    <a href="{{ path(
+                                        'app_agent_terminer_saisie',
+                                        {'id': agent.id}
+                                    ) }}"
+                                       class="btn btn-danger">
+                                        Oui, terminer
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
+                {% endif %}
                 {#
                 {% if agent.saisieTerminee == false %}
                     <a href="{{ path('app_agent_terminer_saisie', {'id': agent.id}) }}"

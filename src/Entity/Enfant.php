@@ -60,13 +60,17 @@ class Enfant
     private ?string $numero_acte = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Assert\GreaterThanOrEqual(
+        propertyPath: 'date_naissance',
+        message: "La date de délivrance de l'acte de naissance doit être postérieure ou égale à la date de naissance."
+    )]
+    #[Assert\LessThanOrEqual(
+        'today',
+        message: "La date de délivrance de l'acte de naissance ne peut pas être postérieure à aujourd'hui."
+    )]
     private ?\DateTimeInterface $date_acte_naissance = null;
 
     #[ORM\Column(length: 64, nullable: true)]
-    #[Assert\Length(
-        min: 3,
-        minMessage: "Le minimum est de {{ limit }} caractères !"
-    )]
     private ?string $nom_conjoint = null;
 
     #[ORM\Column]

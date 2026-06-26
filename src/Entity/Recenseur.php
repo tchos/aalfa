@@ -33,7 +33,7 @@ class Recenseur
     #[ORM\OneToMany(targetEntity: Agent::class, mappedBy: 'recenseur')]
     private Collection $agents;
 
-    #[ORM\Column(length: 8, unique: true)]
+    #[ORM\Column(length: 8)]
     #[Assert\Length(
         min: 8,
         max: 8,
