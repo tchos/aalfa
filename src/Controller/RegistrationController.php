@@ -177,7 +177,8 @@ class RegistrationController extends AbstractController
             $old_password = $form->get('old_password')->getData();
 
             // Si l'ancien mot de passe est le bon
-            if($userPasswordHasher->isPasswordValid($user, $old_password)) {
+            if($userPasswordHasher->isPasswordValid($user, $old_password))
+            {
                 $user->setPassword(
                     $userPasswordHasher->hashPassword(
                         $user,
@@ -189,7 +190,7 @@ class RegistrationController extends AbstractController
                 $history->setTypeAction("UPDATE")
                     ->setAuteur($this->getUser()->getFullname())
                     ->setNature("PASSWORD")
-                    ->setClef($form->get('username')->getData())
+                    ->setClef($form->get('fullname')->getData())
                     ->setDateAction(new \DateTimeImmutable())
                 ;
 
@@ -202,6 +203,7 @@ class RegistrationController extends AbstractController
 
                 // Redirection vers la page de connexion
                 return $this->redirectToRoute('app_logout');
+
             }else {
                 // Notification du mot de passe modifié
                 $this->addFlash("danger", "Votre ancien mot de passe n'est pas valide !!!");

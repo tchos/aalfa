@@ -21,9 +21,9 @@ use Symfony\Component\Security\Http\Attribute\IsGranted;
 #[IsGranted('ROLE_USER')]
 class AgentController extends AbstractController
 {
-    #[Route('/', name: 'app_agent_index')]
+    #[Route('/', name: 'app_agent_index', methods: ['GET', 'POST'])]
     public function index(AgentRepository $agentRepository, Request $request,
-                            Statistiques $statistiques, FicheCollecteService $ficheCollecteService): Response
+                          Statistiques $statistiques, FicheCollecteService $ficheCollecteService): Response
     {
         $agt = null;
         $scan = null;
@@ -163,7 +163,7 @@ class AgentController extends AbstractController
 
         return $this->render('agent/edit.html.twig', [
             'agent' => $agent,
-            'form' => $form,
+            'form' => $form->createView(),
             'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
             'compteurUser' => $statistiques->getCompteurUser($user),
             'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
