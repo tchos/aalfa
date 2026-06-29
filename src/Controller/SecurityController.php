@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -18,11 +19,13 @@ class SecurityController extends AbstractController
     {
         if ($this->getUser()) {
             $user = $this->getUser()->setDateDerniereConnexion(new \DateTime());
+
             // On enregistre la dernière date de connexion de chaque utilisateur dans la bd
             $manager->persist($user);
             $manager->flush();
 
             return $this->redirectToRoute('target_path');
+
         }
 
         // get the login error if there is one

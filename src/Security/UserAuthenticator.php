@@ -2,6 +2,7 @@
 
 namespace App\Security;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -15,6 +16,7 @@ use Symfony\Component\Security\Http\Authenticator\Passport\Credentials\PasswordC
 use Symfony\Component\Security\Http\Authenticator\Passport\Passport;
 use Symfony\Component\Security\Http\SecurityRequestAttributes;
 use Symfony\Component\Security\Http\Util\TargetPathTrait;
+use App\Entity\Utilisateur;
 
 class UserAuthenticator extends AbstractLoginFormAuthenticator
 {
@@ -22,7 +24,10 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
 
     public const LOGIN_ROUTE = 'app_login';
 
-    public function __construct(private UrlGeneratorInterface $urlGenerator)
+    public function __construct(
+        private UrlGeneratorInterface $urlGenerator,
+        private EntityManagerInterface $entityManager
+    )
     {
     }
 
@@ -42,15 +47,38 @@ class UserAuthenticator extends AbstractLoginFormAuthenticator
         );
     }
 
-    public function onAuthenticationSuccess(Request $request, TokenInterface $token, string $firewallName): ?Response
+    public function onAuthenticationSuccess(
+        Request $request, TokenInterface $token, string $firewallName
+    ): ?Response
     {
-        if ($targetPath = $this->getTargetPath($request->getSession(), $firewallName)) {
+        /** @var Utilisateur $user */
+        $user = $token->getUser();
+
+        // Mise à jour de la date de dernière connexion
+        $user->setDateDerniereConnexion(new \DateTime());
+
+        $this->entityManager->flush();
+
+        // Si le mot de passe est temporaire
+        if (!$user->isPasswordModified()) {
+
+            return new RedirectResponse(
+                $this->urlGenerator->generate('app_user_password')
+            );
+        }
+
+        // Si Symfony avait mémorisé une URL
+        if ($targetPath = $this->getTargetPath(
+            $request->getSession(),
+            $firewallName
+        )) {
             return new RedirectResponse($targetPath);
         }
 
-        // For example:
-        return new RedirectResponse($this->urlGenerator->generate('app_home'));
-        //throw new \Exception('TODO: provide a valid redirect inside '.__FILE__);
+        // Sinon accueil
+        return new RedirectResponse(
+            $this->urlGenerator->generate('app_home')
+        );
     }
 
     protected function getLoginUrl(Request $request): string

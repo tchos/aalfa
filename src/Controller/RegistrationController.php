@@ -8,6 +8,7 @@ use App\Form\RegistrationFormType;
 use App\Form\UpdatePasswordType;
 use App\Form\UpdateProfilType;
 use App\Repository\UtilisateurRepository;
+use App\Service\PasswordGenerator;
 use App\Service\Statistiques;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -38,6 +39,9 @@ class RegistrationController extends AbstractController
                     $form->get('password')->getData()
                 )
             );
+
+            // Pour forcer le user a modifié son password
+            $user->setPasswordModified(false);
 
             $entityManager->persist($user);
             $entityManager->flush();
@@ -186,6 +190,9 @@ class RegistrationController extends AbstractController
                     )
                 );
 
+                // Le user a changé son password
+                $user->setPasswordModified(true);
+
                 // On enregistre en BD l'action et celui qui l'a exécuté.
                 $history->setTypeAction("UPDATE")
                     ->setAuteur($this->getUser()->getFullname())
@@ -220,5 +227,46 @@ class RegistrationController extends AbstractController
             'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
             'totalSaisie' => $statistiques->getCountActesNaissances(),
         ]);
+    }
+
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/user/reset-password/{id}', name: 'app_user_reset_password')]
+    public function resetPassword(Utilisateur $user, UserPasswordHasherInterface $passwordHasher,
+        EntityManagerInterface $manager, PasswordGenerator $generator): Response
+    {
+        // Historisation
+        $history = new Historique();
+
+        // Génération du mot de passe
+        $plainPassword = $generator->generate();
+
+        // Réinitialisation du mot de passe
+        $user->setPassword(
+            $passwordHasher->hashPassword(
+                $user,
+                $plainPassword
+            )
+        );
+
+        // L'utilisateur devra modifier son mot de passe
+        $user->setPasswordModified(false);
+
+        $history
+            ->setTypeAction("RESET_PASSWORD")
+            ->setAuteur($this->getUser()->getFullname())
+            ->setNature("COMPTE_USER")
+            ->setClef($user->getFullname())
+            ->setDateAction(new \DateTimeImmutable());
+
+        $manager->persist($user);
+        $manager->persist($history);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            "Le mot de passe temporaire de {$user->getFullname()} est : <strong>{$plainPassword}</strong>"
+        );
+
+        return $this->redirectToRoute('app_users');
     }
 }

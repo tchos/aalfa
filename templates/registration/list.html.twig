@@ -16,6 +16,13 @@
 {% block contenttitle %}Liste des utilisateurs{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message|raw }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     <table id="listeusers" class="display compact" style="width:100%">
         <thead>
             <tr>
@@ -34,7 +41,15 @@
                     <td>{{ user.fullname }}</td>
                     <td class="text-start">{{ user.telephone }}</td>
                     <td class="text-start">{{ user.dateDerniereConnexion|date('d-m-Y  H:i:s') }}</td>
-                    <td class="text-start">Modifier Supprimer Reinitialiser</td>
+                    <td class="text-start">
+                        Modifier Supprimer
+                        <a href="{{ path('app_user_reset_password', {'id': user.id}) }}"
+                           class="btn btn-warning btn-sm"
+                           onclick="return confirm('Voulez-vous vraiment réinitialiser le mot de passe de cet utilisateur ?');">
+                            <i class="fas fa-key"></i>
+                            Réinitialiser
+                        </a>
+                    </td>
                 </tr>
                 {% set i = i + 1 %}
             {% endfor %}

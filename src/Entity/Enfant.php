@@ -88,6 +88,9 @@ class Enfant
     #[ORM\ManyToOne(inversedBy: 'enfants')]
     private ?CentreEtatCivil $centreEtatCivil = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?bool $date_acte_after_3m_yn = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un enfant pour
      * prendre automatiquement la date de saisie des infos sur l'enfant .
@@ -98,6 +101,7 @@ class Enfant
         if (empty($this->createdAt)) {
             $this->createdAt = new \DateTimeImmutable();
         }
+        $this->mettreAJourDateActeAfter3Mois();
     }
 
     /**
@@ -108,6 +112,7 @@ class Enfant
     public function  PreUpdate()
     {
         $this->createdAt = new \DateTimeImmutable();
+        $this->mettreAJourDateActeAfter3Mois();
     }
 
     public function getId(): ?int
@@ -269,6 +274,36 @@ class Enfant
         $this->centreEtatCivil = $centreEtatCivil;
 
         return $this;
+    }
+
+    public function isDateActeAfter3mYn(): ?bool
+    {
+        return $this->date_acte_after_3m_yn;
+    }
+
+    public function setDateActeAfter3mYn(?bool $date_acte_after_3m_yn): static
+    {
+        $this->date_acte_after_3m_yn = $date_acte_after_3m_yn;
+
+        return $this;
+    }
+
+    /**
+     * Cette méthode permet de mettre date_acte_after_3m_yn si l'acte de naissance
+     * a été délivré après 3 mois.
+     * @return boolean
+     */
+    public function mettreAJourDateActeAfter3Mois(): void
+    {
+        if ($this->date_naissance === null || $this->date_acte_naissance === null) {
+            $this->date_acte_after_3m_yn = false;
+            return;
+        }
+
+        $dateLimite = (clone $this->date_naissance)->modify('+3 months');
+
+        $this->date_acte_after_3m_yn =
+            $this->date_acte_naissance > $dateLimite;
     }
 
 }
