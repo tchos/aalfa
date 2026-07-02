@@ -92,4 +92,22 @@ class StatistiqueController extends AbstractController
             'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
         ]);
     }
+
+    #[Route('/minstats', name: 'app_statistique_ministere')]
+    public function minStats(Statistiques $statistiques): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('statistique/minstats.html.twig', [
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
+            'minstats' => $statistiques->getMinistereStats('DESC'),
+            'stats' => $statistiques->getStats(),
+            'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
+        ]);
+    }
 }

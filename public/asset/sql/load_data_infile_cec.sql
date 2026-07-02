@@ -69,7 +69,8 @@ SET
     enfant_reconnu_y_n = 0,
     created_at = NULL,
     handicape_yn = 0,
-    centre_etat_civil_id = NULL
+    centre_etat_civil_id = NULL,
+    date_acte_after_3m_yn = NULL
 WHERE enfant_reconnu_y_n = 1;
 
 UPDATE agent

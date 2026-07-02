@@ -83,6 +83,9 @@ class Agent
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ficheCollecte = null;
 
+    #[ORM\Column(length: 32, nullable: true)]
+    private ?string $ministere = null;
+
     /**
      * CallBack appelé à chaque fois que l'on veut enregistrer un agent pour
      * prendre automatiquement la date de saisie des infos sur l'agent .
@@ -296,6 +299,18 @@ class Agent
     public function setFicheCollecte(?string $ficheCollecte): static
     {
         $this->ficheCollecte = $ficheCollecte;
+
+        return $this;
+    }
+
+    public function getMinistere(): ?string
+    {
+        return $this->ministere;
+    }
+
+    public function setMinistere(?string $ministere): static
+    {
+        $this->ministere = $ministere;
 
         return $this;
     }

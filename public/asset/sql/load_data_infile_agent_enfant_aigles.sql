@@ -38,6 +38,7 @@ SELECT '===== IMPORTATION TABLE AGENT =====' AS INFO;
 
 LOAD DATA LOCAL INFILE 'table_agent.csv'
 INTO TABLE agent
+CHARACTER SET utf8mb4
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
@@ -55,7 +56,8 @@ IGNORE 1 LINES
 @nb_enft_collecte,
 @saisie_terminee,
 @date_validation,
-@fiche_collecte
+@fiche_collecte,
+@ministere
 )
 SET
 id = @id,
@@ -71,10 +73,12 @@ recenseur_id = NULLIF(@recenseur_id,''),
 nb_enft_collecte = NULLIF(@nb_enft_collecte,''),
 saisie_terminee = CAST(IFNULL(NULLIF(@saisie_terminee,''),0) AS UNSIGNED),
 date_validation = NULLIF(@date_validation,''),
-fiche_collecte = NULLIF(@fiche_collecte,'');
+fiche_collecte = NULLIF(@fiche_collecte,''),
+ministere = @ministere;
 
 SHOW WARNINGS LIMIT 20;
 
+/*
 -- =====================================================
 -- IMPORTATION ENFANT
 -- =====================================================
@@ -83,6 +87,7 @@ SELECT '===== IMPORTATION TABLE ENFANT =====' AS INFO;
 
 LOAD DATA LOCAL INFILE 'table_enfant.csv'
 INTO TABLE enfant
+CHARACTER SET latin1
 FIELDS TERMINATED BY ';'
 LINES TERMINATED BY '\n'
 IGNORE 1 LINES
@@ -100,7 +105,8 @@ IGNORE 1 LINES
 @enfant_reconnu_y_n,
 @created_at,
 @handicape_yn,
-@centre_etat_civil_id
+@centre_etat_civil_id,
+@date_acte_after_3m_yn
 )
 SET
 id = @id,
@@ -120,7 +126,8 @@ centre_etat_civil_id =
 CASE
 WHEN TRIM(@centre_etat_civil_id) = '' THEN NULL
 ELSE CAST(@centre_etat_civil_id AS UNSIGNED)
-END
+END,
+date_acte_after_3m_yn = CAST(IFNULL(NULLIF(@date_acte_after_3m_yn,''),0) AS UNSIGNED);
 
 
 SHOW WARNINGS LIMIT 20;
@@ -129,17 +136,12 @@ SHOW WARNINGS LIMIT 20;
 -- CONTROLES
 -- =====================================================
 
-SELECT COUNT(*) AS NB_AGENTS
-FROM agent;
+SELECT COUNT(*) AS NB_AGENTS FROM agent;
 
-SELECT COUNT(*) AS NB_ENFANTS
-FROM enfant;
+SELECT COUNT(*) AS NB_ENFANTS FROM enfant;
 
-SELECT
-    COUNT(*) AS ENFANTS_SANS_AGENT
-FROM enfant e
-LEFT JOIN agent a
-    ON e.agent_id = a.id
+SELECT COUNT(*) AS ENFANTS_SANS_AGENT FROM enfant e
+LEFT JOIN agent a ON e.agent_id = a.id
 WHERE a.id IS NULL;
 
 

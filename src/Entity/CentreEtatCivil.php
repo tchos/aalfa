@@ -21,16 +21,16 @@ class CentreEtatCivil
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 6)]
+    #[ORM\Column(length: 8)]
     #[Assert\Length(
-        min: 6,
-        max: 6,
+        min: 4,
+        max: 8,
         minMessage: 'Le minimum est de {{ limit }} caractères !',
         maxMessage: 'Le max est de {{ limit }} caractères !'
     )]
     #[Assert\Regex(
-        pattern: '/(^AD[0-9]{4}$)|(^CE[0-9]{4}$)|(^ES[0-9]{4}$)|(^EN[0-9]{4}$)|(^LT[0-9]{4}$)
-            |(^NO[0-9]{4}$)|(^NW[0-9]{4}$)|(^OU[0-9]{4}$)|(^SU[0-9]{4}$)|(^SW[0-9]{4}$)/',
+        pattern: '/(^AD[A-Z0-9]{6}$)|(^CE[A-Z0-9]{6}$)|(^ES[A-Z0-9]{6}$)|(^EN[A-Z0-9]{6}$)|(^LT[A-Z0-9]{6}$)
+            |(^NO[A-Z0-9]{6}$)|(^NW[A-Z0-9]{6}$)|(^OU[A-Z0-9]{6}$)|(^SU[A-Z0-9]{6}$)|(^SW[A-Z0-9]{6}$)/',
         match: true,
         message: "Le code {{ value }} n'est pas valide poour un centre d'etat civil."
     )]

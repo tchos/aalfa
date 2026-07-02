@@ -138,6 +138,6 @@ class Recenseur
 
     public function __toString(): string
     {
-        return $this->code.' - '.$this->equipe->getCode();
+        return $this->code;
     }
 }

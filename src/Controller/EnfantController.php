@@ -71,7 +71,7 @@ class EnfantController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_enfant_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
-        Statistiques $statistiques, GestionSaisieAgentService $gestionSaisie): Response
+        Statistiques $statistiques, GestionSaisieAgentService $gestionSaisie, EnfantRepository $enfantRepository): Response
     {
         $agent = $enfant->getAgent();
         $historique = new Historique();
@@ -98,13 +98,13 @@ class EnfantController extends AbstractController
             $leCec = $form->get('code_cec')->getData();
             $codeCec = explode('-', $leCec)[0];
 
+            // on vérifie si le cec saisie existe en BD
             $cec = $entityManager
                 ->getRepository(CentreEtatCivil::class)
                 ->findOneBy([
                     'codeCec' => $codeCec
                 ]);
 
-            // on vérifie si le cec saisie existe en BD
             if (!$cec) {
                 $form->get('code_cec')
                     ->addError(new FormError("Ce code CEC n'existe pas."));
@@ -125,6 +125,36 @@ class EnfantController extends AbstractController
                 // Persistence des données dans la BD.
                 $entityManager->persist($historique);
                 $entityManager->persist($enfant);
+
+                /*
+                $existe = $entityManager
+                    ->$enfantRepository
+                    ->findOneBy([
+                        'matricule' => $enfant->getMatricule(),
+                        'nom_enfant' => $enfant->getNomEnfant(),
+                        'date_naissance' => $enfant->getDateNaissance(),
+                    ]);
+
+                if ($existe && $existe->getId() !== $enfant->getId()) {
+
+                    $this->addFlash(
+                        'danger',
+                        'Cet enfant existe déjà pour cet agent.'
+                    );
+
+                    return $this->render('enfant/update.html.twig', [
+                        'enfant' => $enfant,
+                        'form' => $form->createView(),
+                        'idAgent' => $enfant->getAgent()->getId(),
+                        'matriculeAgent' => $enfant->getAgent()->getMatricule(),
+                        'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+                        'compteurUser' => $statistiques->getCompteurUser($user),
+                        'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+                        'globalUserStats' => $statistiques->getUserStats('DESC'),
+                        'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+                        'totalSaisie' => $statistiques->getCountActesNaissances(),
+                    ]);
+                }*/
                 $entityManager->flush();
 
                 return $this->redirectToRoute(

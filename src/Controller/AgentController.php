@@ -3,10 +3,13 @@
 namespace App\Controller;
 
 use App\Entity\Agent;
+use App\Entity\CentreEtatCivil;
 use App\Entity\Historique;
+use App\Entity\Recenseur;
 use App\Form\AgentType;
 use App\Form\SearchAgentType;
 use App\Repository\AgentRepository;
+use App\Repository\RecenseurRepository;
 use App\Service\FicheCollecteService;
 use App\Service\GestionSaisieAgentService;
 use App\Service\Statistiques;
@@ -147,15 +150,18 @@ class AgentController extends AbstractController
 
     #[Route('/{id}/edit', name: 'app_agent_edit', methods: ['POST','GET'])]
     public function edit(Request $request, Agent $agent, EntityManagerInterface $entityManager, Statistiques $statistiques,
-        GestionSaisieAgentService $gestionSaisie): Response
+        GestionSaisieAgentService $gestionSaisie, RecenseurRepository $recenseurRepository): Response
     {
         $user = $this->getUser();
         $form = $this->createForm(AgentType::class, $agent);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            // Pour gérer le nombre d'enfants renseignés.
             $gestionSaisie->mettreAJourEtatSaisie($agent);
             $entityManager->flush();
+
+            // Redirection vers la page qui va afficher les enfants de l'agent
             return $this->redirectToRoute('app_agent_show', [
                 'id' => $agent->getId()
             ], Response::HTTP_SEE_OTHER);

@@ -114,6 +114,24 @@ class Statistiques
     }
 
     /**
+     * Retourne les statistiques de saisies par ministère.
+     *
+     * @return Enfant
+     */
+    public function getMinistereStats($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT a.ministere AS ministere, COUNT(e.numero_acte) AS nb_enfant
+            FROM App\Entity\Agent a
+            JOIN a.enfants e
+            WHERE e.numero_acte != ''
+            GROUP BY ministere
+            ORDER BY nb_enfant ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
      * Retourne les statistiques journalières de saisies par agents de saisie .
      *
      * @return Utilisateur

@@ -319,5 +319,10 @@ class Utilisateur implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getPremierNom(): string
+    {
+        return explode(' ', trim($this->fullname))[0];
+    }
+
     public function __toString(): string { return $this->fullname; }
 }

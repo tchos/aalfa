@@ -11,7 +11,9 @@ use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: EnfantRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-#[UniqueEntity(fields: ['matricule','nom_enfant'], message: 'Une personne ne peut avoir 2 enfants ayant le même nom !')]
+#[UniqueEntity(fields: ['matricule','nom_enfant','date_naissance'],
+    errorPath: 'nom_enfant',
+    message: 'Une personne ne peut avoir 2 enfants ayant le même nom !')]
 class Enfant
 {
     #[Assert\Callback]
@@ -54,16 +56,18 @@ class Enfant
 
     #[ORM\Column(length: 32, nullable: true)]
     #[Assert\Length(
-        min: 4,
+        min: 2,
         minMessage: "Le minimum est de {{ limit }} caractères !"
     )]
     private ?string $numero_acte = null;
 
+    /**
+     * #[Assert\GreaterThanOrEqual(
+     * propertyPath: 'date_naissance',
+     * message: "La date de délivrance de l'acte de naissance doit être postérieure ou égale à la date de naissance."
+     * )]
+     */
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Assert\GreaterThanOrEqual(
-        propertyPath: 'date_naissance',
-        message: "La date de délivrance de l'acte de naissance doit être postérieure ou égale à la date de naissance."
-    )]
     #[Assert\LessThanOrEqual(
         'today',
         message: "La date de délivrance de l'acte de naissance ne peut pas être postérieure à aujourd'hui."
