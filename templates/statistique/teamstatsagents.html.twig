@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS PAR EQUIPE{% endblock %}
+{% block title %}STATS DES AGENTS RECENSES PAR EQUIPE{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
 {% endblock %}
 
-{% block contenttitle %}Statistiques globales des saisies par équipe !{% endblock %}
+{% block contenttitle %}Statistiques globales des agents recensés par équipe !{% endblock %}
 
 {% block aside %}
     {% include '_partials/_aside.html.twig' with {
@@ -25,12 +25,12 @@
                 <tr>
                     <th class="text-start">Rang</th>
                     <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre enfants saisis</th>
+                    <th class="text-start">Nombre agents recensés</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% set i = 1 %}
-                {% for team in teamStats %}
+                {% for team in teamStatsAgents %}
                     <tr>
                         <td class="text-start">{{ i }}</td>
                         {% if i == 1 %}
@@ -42,7 +42,7 @@
                         {% else %}
                             <td>Equipe {{ team.equipe }}</td>
                         {% endif %}
-                        <td class="text-start">{{ team.nb_enfant | number_format(0,'.',' ') }}</td>
+                        <td class="text-start">{{ team.nb_agent_recense | number_format(0,'.',' ') }}</td>
                     </tr>
                     {% set i = i + 1 %}
                 {% else %}
@@ -53,7 +53,7 @@
                 <tr>
                     <th class="text-start">Rang</th>
                     <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre enfants saisis</th>
+                    <th class="text-start">Nombre agents recensés</th>
                 </tr>
                 </tfoot>
             </table>

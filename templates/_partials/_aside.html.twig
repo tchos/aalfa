@@ -7,12 +7,14 @@
                     <div class="col-8"><p class="card-text">1er: {{ globalUserStats[0].fullname|split(' ')|first }}</p></div>
                     <div class="col"><span class="badge text-bg-success">{{ globalUserStats[0].nb_enfant | number_format(0,'.',' ') }}</span></div>
                 </div>
+                <hr>
             {% endif %}
             {% if globalUserStats[1] is defined %}
                 <div class="row">
                     <div class="col-8"><p class="card-text">2ème: {{ globalUserStats[1].fullname|split(' ')|first }}</p></div>
                     <div class="col"><span class="badge text-bg-success">{{ globalUserStats[1].nb_enfant | number_format(0,'.',' ') }}</span></div>
                 </div>
+                <hr>
             {% endif %}
             {% if globalUserStats[2] is defined %}
                 <div class="row">
@@ -41,12 +43,14 @@
                     <div class="col"><span class="badge text-bg-primary">{{ dailyUserStats[0].nb_enfant | number_format(0,'.',' ') }}</span></div>
                 </div>
                 {% if dailyUserStats[1] is defined %}
+                    <hr>
                     <div class="row">
                         <div class="col-8"><p class="card-text">2ème: {{ dailyUserStats[1].fullname }} </p></div>
                         <div class="col"><span class="badge text-bg-primary">{{ dailyUserStats[1].nb_enfant | number_format(0,'.',' ') }}</span></div>
                     </div>
                 {% endif %}
                 {% if dailyUserStats[2] is defined %}
+                    <hr>
                     <div class="row">
                         <div class="col-8"><p class="card-text">3ème: {{ dailyUserStats[2].fullname }} </p></div>
                         <div class="col"><span class="badge text-bg-primary">{{ dailyUserStats[2].nb_enfant | number_format(0,'.',' ') }}</span></div>

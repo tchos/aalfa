@@ -232,6 +232,25 @@ class Statistiques
     }
 
     /**
+     * Nombres d'équipes inscrites
+     *
+     * @return ArrayCollection
+     */
+    public function getNbAgentRecenseByTeam($direction)
+    {
+        return $this->manager->createQuery(
+            "SELECT e.libelle AS equipe, COUNT(DISTINCT a.matricule) AS nb_agent_recense
+                    FROM App\Entity\Agent a
+                    JOIN a.recenseur r
+                    JOIN r.equipe e
+                    WHERE a.nb_enft_collecte > 0
+                    GROUP BY equipe
+                    ORDER BY nb_agent_recense ".$direction
+        )
+            ->getResult();
+    }
+
+    /**
      * Retourne le nombre d'actes de naissance enregistrés par cec .
      *
      * @return ArrayCollection

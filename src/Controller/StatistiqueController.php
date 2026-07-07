@@ -110,4 +110,22 @@ class StatistiqueController extends AbstractController
             'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
         ]);
     }
+
+    #[Route('/agtsbyrec', name: 'app_statistique_agents_team')]
+    public function nbAgentsByTeam(Statistiques $statistiques): Response
+    {
+        $user = $this->getUser();
+
+        return $this->render('statistique/teamstatsagents.html.twig', [
+            'compteurUserJour' => $statistiques->getDailyCompteurUser($user),
+            'compteurUser' => $statistiques->getCompteurUser($user),
+            'totalActeJour' => $statistiques->getDailyCountActesNaissances(),
+            'globalUserStats' => $statistiques->getUserStats('DESC'),
+            'dailyUserStats' => $statistiques->getDailyUserStats('DESC'),
+            'totalSaisie' => $statistiques->getCountActesNaissances(),
+            'teamStatsAgents' => $statistiques->getNbAgentRecenseByTeam('DESC'),
+            'stats' => $statistiques->getStats(),
+            'recenseurStats' => $statistiques->getRecenseurStats('DESC'),
+        ]);
+    }
 }
