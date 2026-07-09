@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS DES AGENTS RECENSES PAR EQUIPE{% endblock %}
+{% block title %}STATS GLOBALES DES AGENTS RECENSES PAR EQUIPE{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
@@ -23,16 +23,16 @@
             <table id="teamstats" class="display compact" style="width:100%">
                 <thead>
                 <tr>
-                    <th class="text-start">Rang</th>
+                    <th class="text-center">Rang</th>
                     <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre agents recensés</th>
+                    <th class="text-center">Nombre agents recensés</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% set i = 1 %}
                 {% for team in teamStatsAgents %}
                     <tr>
-                        <td class="text-start">{{ i }}</td>
+                        <td class="text-center">{{ i }}</td>
                         {% if i == 1 %}
                             <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt="">Equipe {{ team.equipe }}</td>
                         {% elseif i == 2 %}
@@ -42,7 +42,7 @@
                         {% else %}
                             <td>Equipe {{ team.equipe }}</td>
                         {% endif %}
-                        <td class="text-start">{{ team.nb_agent_recense | number_format(0,'.',' ') }}</td>
+                        <td class="text-center">{{ team.nb_agent_recense | number_format(0,'.',' ') }}</td>
                     </tr>
                     {% set i = i + 1 %}
                 {% else %}
@@ -51,9 +51,9 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th class="text-start">Rang</th>
+                    <th class="text-center">Rang</th>
                     <th class="text-start">Equipe</th>
-                    <th class="text-start">Nombre agents recensés</th>
+                    <th class="text-center">Nombre agents recensés</th>
                 </tr>
                 </tfoot>
             </table>
@@ -100,7 +100,30 @@
                                 text: '<i class="fa fa-file-pdf"></i> PDF',
                                 className: 'btn btn-danger btn-sm',
                                 orientation: 'landscape',
-                                pageSize: 'A4'
+                                pageSize: 'A4',
+
+                                customize: function (doc) {
+
+                                    // Marges
+                                    doc.pageMargins = [20, 20, 20, 20];
+
+                                    // Taille de police
+                                    doc.defaultStyle.fontSize = 9;
+
+                                    // Entête du tableau
+                                    doc.styles.tableHeader.fontSize = 10;
+                                    doc.styles.tableHeader.bold = true;
+                                    doc.styles.tableHeader.alignment = 'center';
+
+                                    // Nombre de colonnes
+                                    var nbCols = doc.content[1].table.body[0].length;
+
+                                    // Les colonnes occupent toute la largeur de la page
+                                    doc.content[1].table.widths = Array(nbCols).fill('*');
+
+                                    // Centrer le tableau
+                                    doc.content[1].alignment = 'center';
+                                }
                             },
                             {
                                 extend: 'print',

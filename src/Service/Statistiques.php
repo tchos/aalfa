@@ -103,7 +103,7 @@ class Statistiques
     public function getUserStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT u.fullname AS fullname, COUNT(e.numero_acte) AS nb_enfant
+            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.matricule) AS nb_acte, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Utilisateur u
             JOIN u.enfants_saisis e
             WHERE e.numero_acte != ''
@@ -121,7 +121,7 @@ class Statistiques
     public function getMinistereStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT a.ministere AS ministere, COUNT(e.numero_acte) AS nb_enfant
+            "SELECT a.ministere AS ministere, COUNT(DISTINCT e.matricule) AS nb_acte, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Agent a
             JOIN a.enfants e
             WHERE e.numero_acte != ''
@@ -139,7 +139,7 @@ class Statistiques
     public function getDailyUserStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT u.fullname AS fullname, COUNT(e.numero_acte) AS nb_enfant
+            "SELECT u.fullname AS fullname, COUNT(DISTINCT e.matricule) AS nb_acte, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Utilisateur u
             JOIN u.enfants_saisis e
             WHERE e.numero_acte != '' AND CURRENT_DATE() <= e.createdAt
@@ -157,7 +157,7 @@ class Statistiques
     public function getTeamStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT i.code AS equipe, COUNT(e.numero_acte) AS nb_enfant
+            "SELECT i.code AS equipe, COUNT(DISTINCT e.matricule) AS nb_acte, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Agent a
             JOIN a.enfants e
             JOIN a.recenseur r
@@ -177,7 +177,7 @@ class Statistiques
     public function getRecenseurStats($direction)
     {
         return $this->manager->createQuery(
-            "SELECT r.nom AS nom, i.libelle AS equipe, COUNT(e.numero_acte) AS nb_enfant
+            "SELECT r.nom AS nom, i.libelle AS equipe, COUNT(DISTINCT e.matricule) AS nb_acte, COUNT(e.numero_acte) AS nb_enfant
             FROM App\Entity\Agent a
             JOIN a.enfants e
             JOIN a.recenseur r
@@ -267,4 +267,30 @@ class Statistiques
         )
             ->getResult();
     }
+
+    /**
+     * Retourne le nombre d'actes de naissance enregistrés par cec .
+     *
+     * @return ArrayCollection
+     */
+    public function getDailyNbActesByUsers(string $direction = 'DESC')
+    {
+        return $this->manager->createQuery(
+            "
+        SELECT
+            e.createdAt AS date_saisie,
+            u.fullname AS utilisateur,
+            a.id AS agent_id,
+            a.telephone AS telephone,
+            e.numero_acte AS numero_acte
+        FROM App\Entity\Enfant e
+        JOIN e.agent_saisie u
+        JOIN e.agent a
+        WHERE e.createdAt IS NOT NULL
+        ORDER BY
+            e.createdAt $direction,
+            u.fullname ASC
+        "
+        )->getResult();
+        }
 }

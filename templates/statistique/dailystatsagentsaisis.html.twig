@@ -1,12 +1,12 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS GLOBALES PAR AGENT DE SAISIE{% endblock %}
+{% block title %}STATS DES FICHES DE COLLECTE SAISIS AU QUOTIDIEN PAR AGENT DE SAISIE{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
 {% endblock %}
 
-{% block contenttitle %}Statistiques globales des saisies !{% endblock %}
+{% block contenttitle %}Statistiques quotidiennes des fiches de collecte saisies par agent de saisie !{% endblock %}
 
 {% block aside %}
     {% include '_partials/_aside.html.twig' with {
@@ -20,31 +20,25 @@
     {% include '_partials/_globalstat.html.twig' with {'stats': stats } %}
     <div class="row">
         <div class="col-sm-9 mx-auto">
-            <table id="globalstats" class="display compact" style="width:100%">
+            <table id="dailystats" class="display compact" style="width:100%">
                 <thead>
                 <tr>
                     <th class="text-center">Rang</th>
-                    <th>Nom complet</th>
-                    <th class="text-center">Nbre fiches de collecte </th>
-                    <th class="text-center">Nombre actes saisis</th>
+                    <th class="text-center">Date du jour</th>
+                    <th class="text-start">Agents de saisie</th>
+                    <th class="text-center">Nombre agents saisis</th>
+                    <th class="text-center">Nombre enfants saisis</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% set i = 1 %}
-                {% for user in globalUserStats %}
+                {% for day in dailyAgentSaisis %}
                     <tr>
                         <td class="text-center">{{ i }}</td>
-                        {% if i == 1 %}
-                            <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt=""> {{ user.fullname }}</td>
-                        {% elseif i == 2 %}
-                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt=""> {{ user.fullname }}</td>
-                        {% elseif i == 3 %}
-                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt=""> {{ user.fullname }}</td>
-                        {% else %}
-                            <td>{{ user.fullname }}</td>
-                        {% endif %}
-                        <td class="text-center">{{ user.nb_acte | number_format(0,'.',' ') }}</td>
-                        <td class="text-center">{{ user.nb_enfant | number_format(0,'.',' ') }}</td>
+                        <th class="text-center">{{ day.date_saisie|date('d/m/Y') }}</th>
+                        <td>{{ day.utilisateur }}</td>
+                        <td class="text-center">{{ day.nb_agents_recenses | number_format(0,'.',' ') }}</td>
+                        <td class="text-center">{{ day.nb_enfants | number_format(0,'.',' ') }}</td>
                     </tr>
                     {% set i = i + 1 %}
                 {% else %}
@@ -54,9 +48,10 @@
                 <tfoot>
                 <tr>
                     <th class="text-center">Rang</th>
-                    <th>Nom complet</th>
-                    <th class="text-center">Nbre fiches de collecte </th>
-                    <th class="text-center">Nombre actes saisis</th>
+                    <th class="text-center">Date du jour</th>
+                    <th class="text-start">Agents de saisie</th>
+                    <th class="text-center">Nombre agents saisis</th>
+                    <th class="text-center">Nombre enfants saisis</th>
                 </tr>
                 </tfoot>
             </table>
@@ -78,7 +73,7 @@
     <script src="{{ asset('asset/js/buttons.print.min.js') }}"></script>
     <script>
         $(document).ready(function(){
-            new DataTable('#globalstats', {
+            new DataTable('#dailystats', {
                 layout: {
                     topStart: {
                         pageLength: true,

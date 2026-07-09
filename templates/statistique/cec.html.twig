@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS PAR CEC{% endblock %}
+{% block title %}STATS GLOBALES PAR CEC{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
@@ -42,7 +42,7 @@
                         {% elseif i == 3 %}
                             <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">{{ cec.code }}</td>
                         {% else %}
-                            <td>Equipe {{ cec.code }}</td>
+                            <td>{{ cec.code }}</td>
                         {% endif %}
                         <td class="text-start">{{ cec.libelle }}</td>
                         <td class="text-center">{{ cec.nb_enfant | number_format(0,'.',' ') }}</td>
@@ -108,7 +108,30 @@
                                 text: '<i class="fa fa-file-pdf"></i> PDF',
                                 className: 'btn btn-danger btn-sm',
                                 orientation: 'landscape',
-                                pageSize: 'A4'
+                                pageSize: 'A4',
+
+                                customize: function (doc) {
+
+                                    // Marges
+                                    doc.pageMargins = [20, 20, 20, 20];
+
+                                    // Taille de police
+                                    doc.defaultStyle.fontSize = 9;
+
+                                    // Entête du tableau
+                                    doc.styles.tableHeader.fontSize = 10;
+                                    doc.styles.tableHeader.bold = true;
+                                    doc.styles.tableHeader.alignment = 'center';
+
+                                    // Nombre de colonnes
+                                    var nbCols = doc.content[1].table.body[0].length;
+
+                                    // Les colonnes occupent toute la largeur de la page
+                                    doc.content[1].table.widths = Array(nbCols).fill('*');
+
+                                    // Centrer le tableau
+                                    doc.content[1].alignment = 'center';
+                                }
                             },
                             {
                                 extend: 'print',

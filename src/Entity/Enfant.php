@@ -27,7 +27,7 @@ class Enfant
         $age = $today->diff($this->date_naissance)->y;
 
         // Si plus de 21 ans et non handicapé, on rejette
-        if($age >= 21 && !$this->handicapeYN){
+        if($age > 21 && !$this->handicapeYN){
             $context->buildViolation(
                 "Impossible d'enregistrer un enfant déjà majeur"
             )->atPath('date_naissance')->addViolation();

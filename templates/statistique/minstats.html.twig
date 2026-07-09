@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS PAR MINISTERE{% endblock %}
+{% block title %}STATS GLOBALES PAR MINISTERE{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
@@ -23,26 +23,28 @@
             <table id="minstats" class="display compact" style="width:100%">
                 <thead>
                 <tr>
-                    <th class="text-start">Rang</th>
+                    <th class="text-center">Rang</th>
                     <th class="text-start">Ministères</th>
-                    <th class="text-start">Nombre actes collectés</th>
+                    <th class="text-center">Nombre actes collectés</th>
+                    <th class="text-center">Nombre enfants saisis</th>
                 </tr>
                 </thead>
                 <tbody>
                 {% set i = 1 %}
                 {% for min in minstats %}
                     <tr>
-                        <td class="text-start">{{ i }}</td>
+                        <td class="text-center">{{ i }}</td>
                         {% if i == 1 %}
                             <td><img src="{{ asset('asset/images/medal_gold.png') }}" width="20px" class="pe-1" alt="">{{ min.ministere }}</td>
                         {% elseif i == 2 %}
-                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt="">Equipe {{ min.ministere }}</td>
+                            <td><img src="{{ asset('asset/images/medal_silver.png') }}" width="20px" class="pe-1" alt="">{{ min.ministere }}</td>
                         {% elseif i == 3 %}
-                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">Equipe {{ min.ministere }}</td>
+                            <td><img src="{{ asset('asset/images/medal_bronze.png') }}" width="20px" class="pe-1" alt="">{{ min.ministere }}</td>
                         {% else %}
                             <td>{{ min.ministere }}</td>
                         {% endif %}
-                        <td class="text-start">{{ min.nb_enfant | number_format(0,'.',' ') }}</td>
+                        <td class="text-center">{{ min.nb_acte | number_format(0,'.',' ') }}</td>
+                        <td class="text-center">{{ min.nb_enfant | number_format(0,'.',' ') }}</td>
                     </tr>
                     {% set i = i + 1 %}
                 {% else %}
@@ -51,9 +53,10 @@
                 </tbody>
                 <tfoot>
                 <tr>
-                    <th class="text-start">Rang</th>
+                    <th class="text-center">Rang</th>
                     <th class="text-start">Ministères</th>
-                    <th class="text-start">Nombre actes collectés</th>
+                    <th class="text-center">Nombre actes collectés</th>
+                    <th class="text-center">Nombre enfants saisis</th>
                 </tr>
                 </tfoot>
             </table>
@@ -100,7 +103,30 @@
                                 text: '<i class="fa fa-file-pdf"></i> PDF',
                                 className: 'btn btn-danger btn-sm',
                                 orientation: 'landscape',
-                                pageSize: 'A4'
+                                pageSize: 'A4',
+
+                                customize: function (doc) {
+
+                                    // Marges
+                                    doc.pageMargins = [20, 20, 20, 20];
+
+                                    // Taille de police
+                                    doc.defaultStyle.fontSize = 9;
+
+                                    // Entête du tableau
+                                    doc.styles.tableHeader.fontSize = 10;
+                                    doc.styles.tableHeader.bold = true;
+                                    doc.styles.tableHeader.alignment = 'center';
+
+                                    // Nombre de colonnes
+                                    var nbCols = doc.content[1].table.body[0].length;
+
+                                    // Les colonnes occupent toute la largeur de la page
+                                    doc.content[1].table.widths = Array(nbCols).fill('*');
+
+                                    // Centrer le tableau
+                                    doc.content[1].alignment = 'center';
+                                }
                             },
                             {
                                 extend: 'print',

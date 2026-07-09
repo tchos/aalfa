@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS PAR EQUIPE{% endblock %}
+{% block title %}STATS PAR AGENT RECENSEUR{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
@@ -23,17 +23,17 @@
             <table id="recenseurstats" class="display compact" style="width:100%">
                 <thead>
                     <tr>
-                        <th class="text-start">Rang</th>
+                        <th class="text-center">Rang</th>
                         <th class="text-start">Agent de collecte</th>
                         <th class="text-start">Equipe</th>
-                        <th class="text-start">Nombre actes collectés</th>
+                        <th class="text-center">Nombre actes collectés</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% set i = 1 %}
                     {% for recenseur in recenseurStats %}
                         <tr>
-                            <td class="text-start">{{ i }}</td>
+                            <td class="text-center">{{ i }}</td>
                             <td><img src="{% if i == 1 %}
                                                 {{ asset('asset/images/medal_gold.png') }}
                                             {% elseif i == 2 %}
@@ -44,7 +44,7 @@
                                 {{ recenseur.nom }}
                             </td>
                             <td class="text-start">{{ recenseur.equipe }}</td>
-                            <td class="text-start">{{ recenseur.nb_enfant | number_format(0,'.',' ') }}</td>
+                            <td class="text-center">{{ recenseur.nb_enfant | number_format(0,'.',' ') }}</td>
                         </tr>
                         {% set i = i + 1 %}
                     {% else %}
@@ -53,10 +53,10 @@
                 </tbody>
                 <tfoot>
                     <tr>
-                        <th class="text-start">Rang</th>
+                        <th class="text-center">Rang</th>
                         <th class="text-start">Agent de collecte</th>
                         <th class="text-start">Equipe</th>
-                        <th class="text-start">Nombre actes collectés</th>
+                        <th class="text-center">Nombre actes collectés</th>
                     </tr>
                 </tfoot>
             </table>
@@ -103,7 +103,30 @@
                                 text: '<i class="fa fa-file-pdf"></i> PDF',
                                 className: 'btn btn-danger btn-sm',
                                 orientation: 'landscape',
-                                pageSize: 'A4'
+                                pageSize: 'A4',
+
+                                customize: function (doc) {
+
+                                    // Marges
+                                    doc.pageMargins = [20, 20, 20, 20];
+
+                                    // Taille de police
+                                    doc.defaultStyle.fontSize = 9;
+
+                                    // Entête du tableau
+                                    doc.styles.tableHeader.fontSize = 10;
+                                    doc.styles.tableHeader.bold = true;
+                                    doc.styles.tableHeader.alignment = 'center';
+
+                                    // Nombre de colonnes
+                                    var nbCols = doc.content[1].table.body[0].length;
+
+                                    // Les colonnes occupent toute la largeur de la page
+                                    doc.content[1].table.widths = Array(nbCols).fill('*');
+
+                                    // Centrer le tableau
+                                    doc.content[1].alignment = 'center';
+                                }
                             },
                             {
                                 extend: 'print',
