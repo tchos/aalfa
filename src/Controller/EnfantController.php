@@ -189,4 +189,32 @@ class EnfantController extends AbstractController
         }
         return $this->redirectToRoute('app_enfant_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/resetenfant/{id}', name: 'app_enfant_reinitialisersaisie')]
+    public function reinitialiserSaisie(Request $request, Enfant $enfant, EntityManagerInterface $entityManager,
+                           GestionSaisieAgentService $gestionSaisie, EnfantRepository $enfantRepository): Response
+    {
+        $historique = new Historique();
+
+        $enfantRepository->reinitialiserSaisie(
+            $enfant->getMatricule(),
+            $enfant->getNomEnfant(),
+            $enfant->getDateNaissance(),
+        );
+
+        $historique->setTypeAction('RESET')
+            ->setAuteur($this->getUser()->getFullname())
+            ->setNature('ENFANT')
+            ->setClef($enfant->getMatricule() .'-'.$enfant->getNomEnfant())
+            ->setDateAction(new \DateTimeImmutable('now'));
+
+        $entityManager->persist($historique);
+        $entityManager->persist($enfant);
+        $entityManager->flush();
+
+        return $this->redirectToRoute(
+            'app_agent_show',['id' => $enfant->getAgent()->getId(),],
+            Response::HTTP_SEE_OTHER,
+        );
+    }
 }

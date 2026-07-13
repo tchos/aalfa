@@ -143,6 +143,53 @@
                             <td class="text-center">{% if enfant.isHandicapeYN == false %}NON{% else  %}OUI{% endif %}</td>
                             <td class="text-center">
                                 {% if enfant.isEnfantReconnuYN == true %}
+                                    <button
+                                            type="button"
+                                            class="btn btn-sm btn-danger"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalAnnulerSaisie">
+                                        Annuler
+                                    </button>
+                                    <div class="modal fade"
+                                         id="modalAnnulerSaisie"
+                                         tabindex="-1">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-warning">
+                                                    <h5 class="modal-title">
+                                                        Attention
+                                                    </h5>
+                                                    <button type="button"
+                                                            class="btn-close"
+                                                            data-bs-dismiss="modal">
+                                                    </button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="alert alert-danger">
+                                                        <strong>
+                                                            Attention !
+                                                        </strong>
+
+                                                        Vous êtes sur le point d'annuler cet enfant ?
+                                                        <hr>
+                                                        Si vous continuez,
+                                                        la saisie sera définitivement annulée.
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button"
+                                                            class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">
+                                                        Non, erreur
+                                                    </button>
+                                                    <a href="{{ path('app_enfant_reinitialisersaisie', {'id': enfant.id}) }}"
+                                                       class="btn btn-danger">
+                                                        Oui, Annuler
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                     <a href="{{ path('app_enfant_show', {'id': enfant.id}) }}"
                                        class="btn btn-sm btn-primary">
                                         Details
@@ -205,7 +252,6 @@
 
                         <i class="fa fa-lock"></i>
                         Terminer la saisie
-
                     </button>
                     <div class="modal fade"
                          id="modalTerminerSaisie"

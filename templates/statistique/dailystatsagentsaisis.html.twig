@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}STATS DES FICHES DE COLLECTE SAISIS AU QUOTIDIEN PAR AGENT DE SAISIE{% endblock %}
+{% block title %}STATS DES FICHES DE COLLECTE SAISIS AU QUOTIDIEN PAR AGENT DE SAISIE  AU {{ "now"|date("d/m/Y") }}{% endblock %}
 
 {% block stylesheets %}
     <link rel="stylesheet" href="{{ asset('asset/css/dataTables.dataTables.css') }}">
@@ -119,8 +119,26 @@
                                     // Les colonnes occupent toute la largeur de la page
                                     doc.content[1].table.widths = Array(nbCols).fill('*');
 
-                                    // Centrer le tableau
-                                    doc.content[1].alignment = 'center';
+                                    // Arranger le tableau
+                                    var body = doc.content[1].table.body;
+
+                                    for (var i = 0; i < body.length; i++) {
+
+                                        // Rang
+                                        body[i][0].alignment = 'center';
+
+                                        // Agents
+                                        body[i][1].alignment = 'center';
+
+                                        // Equipe
+                                        body[i][2].alignment = 'left';
+
+                                        // Nombre agents recensés
+                                        body[i][3].alignment = 'center';
+
+                                        // Nombre agents recensés
+                                        body[i][4].alignment = 'center';
+                                    }
                                 }
                             },
                             {

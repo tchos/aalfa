@@ -292,5 +292,5 @@ class Statistiques
             u.fullname ASC
         "
         )->getResult();
-        }
+    }
 }

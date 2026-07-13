@@ -30,6 +30,38 @@ class EnfantRepository extends ServiceEntityRepository
             ->getResult();
     }
 
+    /**
+     * Annuler la saisie d'un enfant
+     * @param string $matricule
+     * @param string $nomEnfant
+     * @return int
+     */
+    public function reinitialiserSaisie(string $matricule, string $nomEnfant, \DateTimeInterface $dateNaissance): int
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                "UPDATE App\Entity\Enfant e
+            SET
+                e.agent_saisie = NULL,
+                e.numero_acte = NULL,
+                e.date_acte_naissance = NULL,
+                e.nom_conjoint = NULL,
+                e.enfant_reconnu_y_n = false,
+                e.createdAt = NULL,
+                e.handicapeYN = false,
+                e.centreEtatCivil = NULL,
+                e.date_acte_after_3m_yn = NULL
+            WHERE e.enfant_reconnu_y_n = true
+            AND e.matricule = :matricule
+            AND e.nom_enfant = :nomEnfant
+            AND e.date_naissance = :dateNaissance"
+            )
+            ->setParameter('matricule', $matricule)
+            ->setParameter('nomEnfant', $nomEnfant)
+            ->setParameter('dateNaissance', $dateNaissance)
+            ->execute();
+    }
+
     //    /**
     //     * @return Enfant[] Returns an array of Enfant objects
     //     */
