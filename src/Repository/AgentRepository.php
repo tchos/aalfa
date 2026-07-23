@@ -49,6 +49,25 @@ class AgentRepository extends ServiceEntityRepository
         ;
     }
 
+    /**
+     * Déverrouiller la saisie d'un agent
+     * @param string $matricule
+     * @return void
+     */
+    public function deverrouiller(string $matricule)
+    {
+        return $this->getEntityManager()
+            ->createQuery(
+                "UPDATE App\Entity\Agent a
+            SET
+                a.saisie_terminee = false,
+                a.date_validation = NULL
+            WHERE a.matricule = :matricule"
+            )
+            ->setParameter('matricule', $matricule)
+            ->execute();
+    }
+
     //    /**
     //     * @return Agent[] Returns an array of Agent objects
     //     */

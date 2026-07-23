@@ -46,13 +46,13 @@
                 {% endfor %}
                 </tbody>
                 <tfoot>
-                <tr>
-                    <th class="text-center">Rang</th>
-                    <th class="text-center">Date du jour</th>
-                    <th class="text-start">Agents de saisie</th>
-                    <th class="text-center">Nombre agents saisis</th>
-                    <th class="text-center">Nombre enfants saisis</th>
-                </tr>
+                    <tr>
+                        <th class="text-center">Total</th>
+                        <th></th>
+                        <th></th>
+                        <th class="text-center"></th>
+                        <th class="text-center"></th>
+                    </tr>
                 </tfoot>
             </table>
         </div>
@@ -148,6 +148,60 @@
                             }
                         ]
                     }
+                },
+                footerCallback: function () {
+                    let api = this.api();
+                    // Colonnes numériques
+                    [3,4].forEach(function(col) {
+                        let total = api
+                            .column(col,{page:'current'})
+                            .data()
+                            .reduce(function(a,b){
+                                a = Number(
+                                    a.toString()
+                                        .replace(/\s/g,'')
+                                        .replace(',','.')
+                                ) || 0;
+
+                                b = Number(
+                                    b.toString()
+                                        .replace(/\s/g,'')
+                                        .replace(',','.')
+                                ) || 0;
+                                return a+b;
+                            },0);
+                        $(api.column(col).footer()).html(
+                            '<strong>'+total.toLocaleString('fr-FR')+'</strong>'
+                        );
+                    });
+
+                    $(api.column(0).footer()).html('<strong>TOTAL</strong>');
+                    let total = [];
+                    total.push({
+                        text:'TOTAL',
+                        bold:true,
+                        alignment:'center'
+                    });
+                    total.push({
+                        text:'',
+                    });
+
+                    [3,4].forEach(function(col){
+                        let somme = 0;
+                        for(let i=1;i<body.length;i++){
+                            somme += parseFloat(
+                                body[i][col].text
+                                    .toString()
+                                    .replace(/\s/g,'')
+                            ) || 0;
+                        }
+                        total.push({
+                            text:somme.toLocaleString('fr-FR'),
+                            bold:true,
+                            alignment:'center'
+                        });
+                    });
+                    body.push(total);
                 }
             });
         });

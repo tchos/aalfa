@@ -83,6 +83,55 @@
                             <button class="btn btn-sm btn-secondary" disabled>
                                 Saisie validée
                             </button>
+                            {% if is_granted('ROLE_ADMIN') %}
+                                <button
+                                        type="button"
+                                        class="btn btn-sm btn-danger"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#enable-{{ agent.id }}">
+                                    Déverrouiller
+                                </button>
+                                <div class="modal fade"
+                                     id="enable-{{ agent.id }}"
+                                     tabindex="-1">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header bg-warning">
+                                                <h5 class="modal-title">
+                                                    Attention
+                                                </h5>
+                                                <button type="button"
+                                                        class="btn-close"
+                                                        data-bs-dismiss="modal">
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="alert alert-danger">
+                                                    <strong>
+                                                        Attention !
+                                                    </strong>
+
+                                                    Vous êtes sur le point de déverrouiller la saisie !
+                                                    <hr>
+                                                    Si vous continuez,
+                                                    la validation sera annulée.
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button"
+                                                        class="btn btn-secondary"
+                                                        data-bs-dismiss="modal">
+                                                    Non, erreur
+                                                </button>
+                                                <a href="{{ path('app_agent_enable', {'id': agent.id}) }}"
+                                                   class="btn btn-danger">
+                                                    Oui, Déverrouiller
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endif %}
                         {% endif %}
 
                         <!-- La fenêtre modale qui affichera le formulaire -->

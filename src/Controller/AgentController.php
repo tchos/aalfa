@@ -201,6 +201,30 @@ class AgentController extends AbstractController
         return $this->redirectToRoute('app_agent_show', ['id' => $agent->getId()]);
     }
 
+    #[IsGranted('ROLE_ADMIN')]
+    #[Route('/enable/{id}', name: 'app_agent_enable')]
+    public function reinitialiserSaisie(Request $request, Agent $agent, EntityManagerInterface $entityManager,
+                                        AgentRepository $agentRepository): Response
+    {
+        $historique = new Historique();
+        $agentRepository->deverrouiller($agent->getMatricule());
+
+        $historique->setTypeAction('DEVERROUILLER')
+            ->setAuteur($this->getUser()->getFullname())
+            ->setNature('AGENT')
+            ->setClef($agent->getMatricule())
+            ->setDateAction(new \DateTimeImmutable('now'));
+
+        $entityManager->persist($historique);
+        $entityManager->persist($agent);
+        $entityManager->flush();
+
+        return $this->redirectToRoute(
+            'app_agent_show',['id' => $agent->getId()],
+            Response::HTTP_SEE_OTHER,
+        );
+    }
+
     /*
     #[Route('/agent/{id}/terminer-saisie', name: 'app_agent_terminer_saisie')]
     public function terminerSaisies(Agent $agent, EntityManagerInterface $em): Response
